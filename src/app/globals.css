@@ -31,6 +31,8 @@
   --radius: 10px;
   --radius-sm: 4px;
 
+  /* Extra entrance delay while the first-load curtain lifts; MotionArm sets it to 0s afterwards */
+  --intro: .9s;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-io: cubic-bezier(.65, 0, .35, 1);
 }
@@ -61,6 +63,10 @@ address { font-style: normal; }
 }
 .skip-link:focus { top: 16px; }
 
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
 .eyebrow { font-size: 13px; font-weight: 500; color: var(--muted); }
 .b700 { font-weight: 700; }
 .b300 { font-weight: 300; }
@@ -70,21 +76,21 @@ address { font-style: normal; }
 .w > span {
   display: inline-block; transform: translateY(108%);
   animation: wordUp 1.15s var(--ease-out) forwards;
-  animation-delay: var(--d, 0s);
+  animation-delay: calc(var(--intro) + var(--d, 0s));
 }
 @keyframes wordUp { to { transform: none; } }
 
 .load-in {
   opacity: 0;
   animation: fadeUp 1.1s var(--ease-out) forwards;
-  animation-delay: var(--d, 0s);
+  animation-delay: calc(var(--intro) + var(--d, 0s));
 }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 
 .load-line {
   transform: scaleX(0); transform-origin: left;
   animation: lineDraw 1.2s var(--ease-out) forwards;
-  animation-delay: var(--d, 0s);
+  animation-delay: calc(var(--intro) + var(--d, 0s));
 }
 @keyframes lineDraw { to { transform: scaleX(1); } }
 
@@ -204,4 +210,30 @@ address { font-style: normal; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .w > span, .load-in, .load-line { transform: none !important; opacity: 1 !important; }
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("../assets/fonts/InterTight-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("../assets/fonts/Montserrat-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("../assets/fonts/Montserrat-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --font-inter-tight: "Inter Tight";
+  --font-montserrat: Montserrat;
 }

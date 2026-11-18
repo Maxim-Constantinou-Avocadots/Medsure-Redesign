@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState, type ElementType, type ComponentPropsWithoutRef } from "react";
 import { cx } from "@/lib/motion";
 

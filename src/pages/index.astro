@@ -1,0 +1,14 @@
+---
+import Page, { metadata } from "@/app/page";
+import Layout from "@/layouts/Layout.astro";
+import { formIds } from "@/content/form-ids";
+import { getForm } from "@/wix/forms/forms";
+
+const initialForm = await getForm(formIds.contact).catch((error) => {
+  console.error("Could not load Medsure contact form:", error);
+  return undefined;
+});
+---
+<Layout {metadata}>
+  <Page {initialForm} client:load />
+</Layout>

@@ -1,0 +1,44 @@
+---
+import { Curtain } from "@/components/Curtain";
+import { Footer } from "@/components/Footer";
+import { MotionArm } from "@/components/MotionArm";
+import { Nav } from "@/components/Nav";
+import { siteDescription, siteTitle, siteUrl, type PageMetadata } from "@/lib/site-meta";
+import "@/app/globals.css";
+
+interface Props {
+  metadata?: PageMetadata;
+}
+const { metadata } = Astro.props;
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const title = typeof metadata?.title === "string" ? `${metadata.title} | Medsure Medicare` : metadata?.title.absolute ?? siteTitle;
+const description = metadata?.description ?? siteDescription;
+const canonical = metadata?.alternates ? new URL(metadata.alternates.canonical, siteUrl) : undefined;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#12172B" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonical && <link rel="canonical" href={canonical.toString()} />}
+    {canonical && <meta property="og:url" content={canonical.toString()} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Medsure Medicare" />
+    <meta property="og:locale" content="en_CY" />
+    <meta property="og:image" content={new URL("/opengraph-image.jpg", Astro.url).toString()} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Curtain />
+    <Nav {pathname} client:load />
+    <slot />
+    <Footer />
+    <MotionArm client:load />
+  </body>
+</html>

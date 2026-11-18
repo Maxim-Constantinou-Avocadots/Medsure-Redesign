@@ -1,7 +1,6 @@
-"use client";
-
 import { useId, useState } from "react";
-import { faqs } from "@/content/site";
+import { routes } from "@/content/company";
+import { faqs } from "@/content/home";
 import { Reveal } from "./Reveal";
 import { Button } from "./Button";
 import { PlusIcon } from "./icons";
@@ -24,7 +23,7 @@ export function Faq() {
             <br />
             Get in touch with our team
           </div>
-          <Button href="#contact">Contact us</Button>
+          <Button href={routes.contact}>Contact us</Button>
         </div>
       </div>
 

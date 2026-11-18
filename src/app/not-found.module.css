@@ -1,0 +1,6 @@
+.wrap { min-height: 100svh; display: grid; place-items: center; padding: 140px var(--gutter) 96px; background: var(--navy-deep); color: var(--light); }
+.inner { max-width: 640px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.code { font-size: 14px; font-weight: 500; color: rgba(242,242,242,.6); }
+.title { font-size: clamp(40px, 5vw, 72px); line-height: 1; font-weight: 500; letter-spacing: -0.035em; }
+.lead { font-size: 17px; line-height: 1.55; color: rgba(242,242,242,.85); margin-bottom: 12px; }
+.lead a { color: #fff; }

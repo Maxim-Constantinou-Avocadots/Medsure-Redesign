@@ -12,14 +12,23 @@ type Props = {
 
 /** Editorial button: label top-left, arrow bottom-right, colour sweep on hover. */
 export function Button({ href, children, variant = "dark", className, style }: Props) {
-  return (
-    <a
-      href={href}
-      className={cx("btn", variant !== "dark" && `btn--${variant}`, className)}
-      style={style}
-    >
+  const classes = cx("btn", variant !== "dark" && `btn--${variant}`, className);
+  const inner = (
+    <>
       <span>{children}</span>
       <ArrowIcon className="btn__arrow" />
+    </>
+  );
+  if (href.startsWith("/")) {
+    return (
+      <a href={href} className={classes} style={style}>
+        {inner}
+      </a>
+    );
+  }
+  return (
+    <a href={href} className={classes} style={style}>
+      {inner}
     </a>
   );
 }

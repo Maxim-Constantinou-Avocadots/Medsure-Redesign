@@ -1,0 +1,42 @@
+.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 18px; }
+.inline { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.span2 { grid-column: 1 / -1; }
+.inline .field { grid-column: auto; }
+.label { font-size: 12px; font-weight: 500; color: var(--muted); }
+.input {
+  width: 100%; padding: 12px 0 10px; border: 0; border-bottom: 1px solid #b9b9b8; border-radius: 0;
+  background: transparent; font: inherit; font-size: 16px; color: var(--ink);
+  transition: border-color .3s;
+}
+.input:focus { outline: none; border-bottom-color: var(--navy); box-shadow: 0 1px 0 0 var(--navy); }
+.input:focus-visible { outline: none; }
+.textarea { resize: vertical; min-height: 120px; }
+.select { appearance: none; cursor: pointer; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 10px) 55%, calc(100% - 5px) 55%; background-size: 5px 5px; background-repeat: no-repeat; }
+
+.footer { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 8px; }
+.inline .footer { grid-column: auto; margin: 0; }
+.submit { border: 0; cursor: pointer; font: inherit; font-size: 13px; text-align: left; }
+.submit:disabled { opacity: .7; cursor: progress; }
+.note { font-size: 12px; color: var(--muted); max-width: 320px; line-height: 1.5; }
+.error { grid-column: 1 / -1; font-size: 14px; line-height: 1.5; color: #8a2a12; background: #f7e7e1; padding: 12px 14px; border-radius: var(--radius-sm); }
+
+.dark .label, .dark .note { color: rgba(242,242,242,.7); }
+.dark .input { color: #fff; border-bottom-color: rgba(255,255,255,.35); }
+.dark .input:focus { border-bottom-color: #fff; box-shadow: 0 1px 0 0 #fff; }
+.dark .error { color: #fff; background: rgba(232,105,44,.25); }
+
+.done {
+  padding: 32px; border-radius: var(--radius); background: #fff;
+  display: flex; flex-direction: column; gap: 10px;
+  animation: doneIn .8s var(--ease-out) both;
+}
+.doneDark { background: rgba(255,255,255,.08); color: var(--light); }
+@keyframes doneIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.doneBody { font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+.doneDark .doneBody { color: rgba(242,242,242,.8); }
+
+@media (max-width: 640px) {
+  .form { grid-template-columns: 1fr; }
+  .inline { grid-template-columns: 1fr; }
+}

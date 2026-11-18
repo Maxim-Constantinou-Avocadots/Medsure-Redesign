@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { specialties } from "@/content/site";
+import { specialties } from "@/content/liability";
 import styles from "./Marquee.module.css";
 
 function Group({ hidden }: { hidden?: boolean }) {

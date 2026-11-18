@@ -1,8 +1,7 @@
-"use client";
-
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useState } from "react";
-import { reasons } from "@/content/site";
+import { routes } from "@/content/company";
+import { reasons } from "@/content/home";
 import { Reveal } from "./Reveal";
 import { Button } from "./Button";
 import { ChevronLeft, ChevronRight } from "./icons";
@@ -59,8 +58,8 @@ export function Why() {
                 <p className={styles.body}>{r.body}</p>
               </div>
             ))}
-            <Button href="#contact" className={styles.cta}>
-              Talk to an advisor
+            <Button href={routes.contact} className={styles.cta}>
+              Contact us
             </Button>
           </div>
         </div>
@@ -92,7 +91,7 @@ export function Why() {
                   alt={r.photo.alt}
                   fill
                   sizes="(max-width: 960px) 100vw, 60vw"
-                  placeholder="blur"
+
                   style={{ objectPosition: r.photo.position }}
                 />
               </div>
