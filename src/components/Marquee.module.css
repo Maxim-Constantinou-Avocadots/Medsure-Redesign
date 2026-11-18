@@ -4,8 +4,9 @@
   font-size: clamp(56px, 7vw, 112px); font-weight: 500; letter-spacing: -0.04em; line-height: 1; white-space: nowrap;
   animation: marquee 46s linear infinite;
 }
-.marquee:hover .track { animation-play-state: paused; }
 .group { display: flex; gap: .45em; padding-right: .45em; align-items: center; }
 .star { color: var(--accent); }
-.outline { color: transparent; -webkit-text-stroke: 1.2px var(--navy); }
+@media (any-hover: hover) {
+  .label:hover { color: transparent; -webkit-text-stroke: 1.2px var(--navy); }
+}
 @keyframes marquee { to { transform: translateX(-50%); } }
