@@ -1,15 +1,28 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
-import { specialties } from "@/content/site";
+import { routes } from "@/content/company";
+import type { Specialty } from "@/content/liability";
 import { Reveal } from "./Reveal";
 import { Button } from "./Button";
 import { ArrowIcon, ChevronLeft, ChevronRight } from "./icons";
 import { cx, delay, prefersReducedMotion } from "@/lib/motion";
 import styles from "./Specialties.module.css";
 
-export function Specialties() {
+type Props = {
+  id?: string;
+  eyebrow: string;
+  title: string;
+  items: Specialty[];
+  /** Show the "All specialties" link to the Professional Liability hub */
+  showHubLink?: boolean;
+  tone?: "base" | "alt";
+};
+
+/** Horizontal rail of specialty cards, each linking to its page. */
+export function Specialties({ id, eyebrow, title, items, showHubLink = true, tone = "base" }: Props) {
   const railRef = useRef<HTMLDivElement>(null);
 
   const scrollRail = (dir: 1 | -1) => {
@@ -22,43 +35,43 @@ export function Specialties() {
   };
 
   return (
-    <Reveal id="cover" className={styles.section}>
+    <Reveal id={id} className={cx(styles.section, tone === "alt" && styles.alt)}>
       <div className={styles.head}>
         <div className={styles.headCopy}>
           <div className={cx("eyebrow rv", styles.eyebrow)}>
             <span className={styles.dot} aria-hidden="true" />
-            Professional Liability
+            {eyebrow}
           </div>
           <h2 className={cx(styles.title, "rv")} style={delay(120)}>
-            Specialist liability insurance for every medical profession — tailored, never templated.
+            {title}
           </h2>
         </div>
         <div className={cx(styles.actions, "rv")} style={delay(240)}>
           <div className={styles.arrows}>
-            <button type="button" className="icon-btn" aria-label="Scroll specialties left" onClick={() => scrollRail(-1)}>
+            <button type="button" className="icon-btn" aria-label="Scroll left" onClick={() => scrollRail(-1)}>
               <ChevronLeft width={14} height={14} />
             </button>
-            <button type="button" className="icon-btn" aria-label="Scroll specialties right" onClick={() => scrollRail(1)}>
+            <button type="button" className="icon-btn" aria-label="Scroll right" onClick={() => scrollRail(1)}>
               <ChevronRight width={14} height={14} />
             </button>
           </div>
-          <Button href="#cover">All specialties</Button>
+          {showHubLink && <Button href={routes.liability}>All specialties</Button>}
         </div>
       </div>
 
       <div ref={railRef} className={styles.rail}>
-        {specialties.map((item, i) => (
-          <div key={item.title} className={cx(styles.item, "rv")} style={delay(200 + i * 100)}>
-            <article className={styles.card}>
+        {items.map((item, i) => (
+          <div key={item.slug} className={cx(styles.item, "rv")} style={delay(200 + i * 100)}>
+            <Link href={item.href} className={styles.card}>
               <div className={styles.top}>
                 <div className={styles.img}>
                   <Image
-                    src={item.photo.src}
-                    alt={item.photo.alt}
+                    src={item.card.src}
+                    alt={item.card.alt}
                     fill
                     sizes="(max-width: 960px) 80vw, 330px"
                     placeholder="blur"
-                    style={{ objectPosition: item.photo.position }}
+                    style={{ objectPosition: item.card.position }}
                   />
                 </div>
                 <h3 className={styles.cardTitle}>
@@ -68,12 +81,12 @@ export function Specialties() {
               </div>
               <div className={styles.body}>
                 <div className={styles.label}>Coverage overview</div>
-                <p className={styles.text}>{item.text}</p>
-                <a href="#cover" className={styles.more}>
+                <p className={styles.text}>{item.summary}</p>
+                <span className={styles.more}>
                   Explore cover <ArrowIcon />
-                </a>
+                </span>
               </div>
-            </article>
+            </Link>
           </div>
         ))}
       </div>

@@ -1,5 +1,4 @@
-import { Curtain } from "@/components/Curtain";
-import { Nav } from "@/components/Nav";
+import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
 import { Specialties } from "@/components/Specialties";
 import { Why } from "@/components/Why";
@@ -8,26 +7,31 @@ import { About } from "@/components/About";
 import { Marquee } from "@/components/Marquee";
 import { Steps } from "@/components/Steps";
 import { Faq } from "@/components/Faq";
+import { ContactSection } from "@/components/ContactSection";
 import { Closing } from "@/components/Closing";
-import { Footer } from "@/components/Footer";
+import { specialties } from "@/content/liability";
+import { homeContact, specialtiesIntro } from "@/content/home";
+
+export const metadata: Metadata = {
+  title: { absolute: "Medsure — Medical malpractice insurance in Cyprus" },
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (
     <>
-      <Curtain />
-      <Nav />
       <Hero />
       <main id="main">
-        <Specialties />
+        <Specialties id="cover" eyebrow={specialtiesIntro.eyebrow} title={specialtiesIntro.title} items={specialties} />
         <Why />
         <StatementBand />
         <About />
         <Marquee />
         <Steps />
         <Faq />
+        <ContactSection eyebrow={homeContact.eyebrow} title={homeContact.title} />
         <Closing />
       </main>
-      <Footer />
     </>
   );
 }

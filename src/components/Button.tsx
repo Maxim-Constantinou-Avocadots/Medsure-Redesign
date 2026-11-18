@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowIcon } from "./icons";
 import { cx } from "@/lib/motion";
@@ -12,14 +13,23 @@ type Props = {
 
 /** Editorial button: label top-left, arrow bottom-right, colour sweep on hover. */
 export function Button({ href, children, variant = "dark", className, style }: Props) {
-  return (
-    <a
-      href={href}
-      className={cx("btn", variant !== "dark" && `btn--${variant}`, className)}
-      style={style}
-    >
+  const classes = cx("btn", variant !== "dark" && `btn--${variant}`, className);
+  const inner = (
+    <>
       <span>{children}</span>
       <ArrowIcon className="btn__arrow" />
+    </>
+  );
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href} className={classes} style={style}>
+        {inner}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} className={classes} style={style}>
+      {inner}
     </a>
   );
 }

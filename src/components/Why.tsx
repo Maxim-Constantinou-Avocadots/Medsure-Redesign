@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { reasons } from "@/content/site";
+import { routes } from "@/content/company";
+import { reasons } from "@/content/home";
 import { Reveal } from "./Reveal";
 import { Button } from "./Button";
 import { ChevronLeft, ChevronRight } from "./icons";
@@ -59,8 +60,8 @@ export function Why() {
                 <p className={styles.body}>{r.body}</p>
               </div>
             ))}
-            <Button href="#contact" className={styles.cta}>
-              Talk to an advisor
+            <Button href={routes.contact} className={styles.cta}>
+              Contact us
             </Button>
           </div>
         </div>

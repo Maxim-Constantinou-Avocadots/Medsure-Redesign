@@ -1,4 +1,6 @@
 .section { padding: clamp(64px, 7vw, 104px) 0; }
+.alt { background: var(--bg-alt); }
+.alt .top, .alt .body { background: #fff; }
 .head {
   padding: 0 var(--gutter);
   display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap;
@@ -19,9 +21,9 @@
   scrollbar-width: none;
 }
 .rail::-webkit-scrollbar { display: none; }
-.item { flex: 0 0 auto; width: clamp(272px, 22vw, 330px); scroll-snap-align: start; }
+.item { display: flex; flex: 0 0 auto; width: clamp(272px, 22vw, 330px); scroll-snap-align: start; }
 
-.card { display: flex; flex-direction: column; gap: 8px; transition: transform .6s var(--ease-out); }
+.card { display: flex; flex-direction: column; gap: 8px; width: 100%; height: 100%; transition: transform .6s var(--ease-out); }
 .card:hover { transform: translateY(-8px); }
 .top { background: var(--surface); border-radius: var(--radius); padding: 10px 10px 16px; }
 .img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 6px; }
@@ -29,7 +31,8 @@
 .card:hover .img img { transform: scale(1.07); }
 .cardTitle { display: flex; justify-content: space-between; margin-top: 14px; font-size: 16px; font-weight: 500; }
 .cardTitle span:last-child { color: var(--muted-2); }
-.body { background: var(--surface); border-radius: var(--radius); padding: 16px 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.body { flex: 1; background: var(--surface); border-radius: var(--radius); padding: 16px 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.body .more { margin-top: auto; }
 .label { font-size: 12px; font-weight: 500; color: var(--muted); }
 .text { font-size: 14px; line-height: 1.45; }
 .more { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; font-weight: 600; }

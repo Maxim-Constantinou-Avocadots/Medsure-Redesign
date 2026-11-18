@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Curtain } from "@/components/Curtain";
+import { Nav } from "@/components/Nav";
+import { Footer } from "@/components/Footer";
 import { MotionArm } from "@/components/MotionArm";
 import "./globals.css";
 
@@ -21,15 +24,16 @@ const montserrat = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.medsure.com.cy"),
-  title: "Medsure — Medical malpractice insurance in Cyprus",
+  title: {
+    default: "Medsure — Medical malpractice insurance in Cyprus",
+    template: "%s | Medsure Medicare",
+  },
   description:
-    "Medsure is a boutique insurance agency in Nicosia providing medical malpractice and professional liability insurance for dentists, clinics, independent physicians, aesthetic practitioners and paramedical professionals.",
+    "Medsure Insurance Agency provides clients with the best medical malpractice insurance coverage and an uncompromising service experience — for dentists, clinics, independent physicians, light aesthetics, paramedicine and additional professions.",
   openGraph: {
     type: "website",
-    title: "Medsure — Medical malpractice insurance in Cyprus",
-    description: "Specialist professional liability insurance for every medical profession — tailored, never templated.",
+    siteName: "Medsure Medicare",
     locale: "en_CY",
-    siteName: "Medsure",
   },
 };
 
@@ -44,7 +48,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <Curtain />
+        <Nav />
         {children}
+        <Footer />
         <MotionArm />
       </body>
     </html>

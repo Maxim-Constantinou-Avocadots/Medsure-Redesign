@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { statements } from "@/content/site";
+import { statements } from "@/content/home";
 import { Reveal } from "./Reveal";
 import { cx, delay, prefersReducedMotion } from "@/lib/motion";
 import styles from "./StatementBand.module.css";

@@ -1,4 +1,4 @@
-import { steps } from "@/content/site";
+import { steps } from "@/content/home";
 import { Reveal } from "./Reveal";
 import { cx, delay } from "@/lib/motion";
 import styles from "./Steps.module.css";

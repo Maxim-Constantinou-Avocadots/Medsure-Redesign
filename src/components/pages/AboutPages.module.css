@@ -1,0 +1,50 @@
+/* Newsletter (About hub) */
+.newsletter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.newsTitle { font-size: clamp(30px, 3.2vw, 46px); line-height: 1.05; font-weight: 500; letter-spacing: -0.03em; }
+
+/* History timeline */
+.timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.tItem { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px; padding: 36px 0; border-bottom: 1px solid var(--rule); }
+.tMarker { font-size: clamp(44px, 5vw, 76px); font-weight: 500; letter-spacing: -0.04em; line-height: .95; color: var(--navy); }
+.tTitle { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; }
+.tText { margin-top: 12px; font-size: 16px; line-height: 1.65; color: var(--ink-2); max-width: 640px; }
+
+/* Service charter */
+.highlights { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0; }
+.hl { padding: 8px 32px 8px 0; border-left: 1px solid rgba(255,255,255,.18); padding-left: 28px; }
+.hl:first-child { border-left: 0; padding-left: 0; }
+.hlValue { font-size: clamp(56px, 6vw, 96px); font-weight: 500; letter-spacing: -0.04em; line-height: 1; display: flex; align-items: baseline; gap: 12px; }
+.hlValue span { font-size: 15px; letter-spacing: 0; font-weight: 500; color: rgba(242,242,242,.7); }
+.hlLabel { margin-top: 14px; font-size: 15px; line-height: 1.5; color: rgba(242,242,242,.82); max-width: 280px; }
+.commitments { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.cItem { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 24px; padding: 26px 0; border-bottom: 1px solid var(--rule); }
+.cNum { font-size: 14px; font-weight: 500; color: var(--muted); padding-top: 4px; }
+.cText { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; letter-spacing: -0.01em; max-width: 900px; }
+
+/* Values */
+.pillars { list-style: none; margin: clamp(48px, 6vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.pillar {
+  min-height: 220px; padding: 24px; border-radius: var(--radius); background: var(--surface);
+  display: flex; flex-direction: column; justify-content: space-between;
+  transition: transform .6s var(--ease-out);
+}
+.pillar:hover { transform: translateY(-6px); }
+.pillarDark { background: var(--navy); color: var(--light); }
+.pNum { font-size: 13px; font-weight: 500; color: var(--muted); }
+.pillarDark .pNum { color: rgba(242,242,242,.7); }
+.pName { font-size: clamp(26px, 2.4vw, 34px); font-weight: 500; letter-spacing: -0.025em; }
+.quote { margin-top: clamp(48px, 6vw, 88px); font-size: clamp(26px, 3vw, 44px); line-height: 1.12; font-weight: 500; letter-spacing: -0.03em; max-width: 900px; }
+
+/* Lloyd's */
+.facts { list-style: none; margin: 0 0 clamp(56px, 7vw, 104px); padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.fact { padding: 28px 0 0; border-top: 1.5px solid var(--ink); display: flex; flex-direction: column; gap: 12px; }
+.factValue { font-size: clamp(64px, 8vw, 128px); font-weight: 500; letter-spacing: -0.05em; line-height: .9; color: var(--navy); }
+.factLabel { font-size: 15px; line-height: 1.5; color: var(--ink-2); max-width: 320px; }
+
+@media (max-width: 760px) {
+  .newsletter { grid-template-columns: 1fr; }
+  .tItem { grid-template-columns: 1fr; gap: 12px; }
+  .cItem { grid-template-columns: 48px minmax(0, 1fr); gap: 12px; }
+  .hl { border-left: 0; padding-left: 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.18); }
+  .hl:first-child { border-top: 0; }
+}

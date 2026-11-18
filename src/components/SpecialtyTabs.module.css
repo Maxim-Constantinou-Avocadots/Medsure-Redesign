@@ -1,0 +1,13 @@
+.bar { background: var(--bg); border-bottom: 1px solid var(--rule); }
+.list {
+  list-style: none; margin: 0; padding: 10px var(--gutter);
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+}
+.list::-webkit-scrollbar { display: none; }
+.tab {
+  display: inline-block; white-space: nowrap; padding: 10px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; color: var(--ink-2);
+  transition: background .3s, color .3s;
+}
+.tab:hover { background: rgba(255,255,255,.7); color: var(--ink); }
+.active, .active:hover { background: var(--navy); color: #fff; }

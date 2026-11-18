@@ -1,6 +1,6 @@
 # Medsure — Homepage Redesign
 
-A premium, editorial homepage for [Medsure Medicare Insurance Brokers (Cyprus) Ltd](https://www.medsure.com.cy/), designed and built by [Avocadots](https://avocadots.com).
+A premium, editorial redesign of [Medsure Medicare Insurance Brokers (Cyprus) Ltd](https://www.medsure.com.cy/), designed and built by [Avocadots](https://avocadots.com). It covers all 17 pages of the current English site, at the same URLs.
 
 **Stack:** Next.js 16 (App Router, Turbopack), React 19, TypeScript and CSS Modules. There's no UI or animation library: the motion is plain CSS plus a few small client components.
 
@@ -20,6 +20,28 @@ npm run dev        # http://localhost:3000
 | `npm run start` | Serves the production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, no emit |
+| `npm run check:content -- http://localhost:3000` | Checks every page against the content inventory (run against `npm run start`) |
+
+## Pages
+
+| URL | Page |
+| --- | --- |
+| `/` | Home |
+| `/about-us-medsure` | About Us hub (+ newsletter sign-up) |
+| `/values-vision`, `/history`, `/service-charter`, `/lloyds-corporation`, `/medsure` | About pages |
+| `/medical-professional-responsibility` | Professional Liability hub |
+| `/dentistry`, `/light-aesthetics`, `/clinics`, `/independent-physicians`, `/paramedicine`, `/additional-professions` | Specialty pages (one shared template) |
+| `/careers` | Careers (+ application form with CV upload) |
+| `/contact-us` | Contact (+ message form) |
+| `/privacy-policy` | Privacy Policy (word for word) |
+
+All copy comes from `docs/content-inventory.md`, a word-for-word capture of the live site. Every content module notes which inventory section it draws from. `npm run check:content` confirms every page still carries its source facts, and that known source errors (e.g. "Taurus", "Easy Aesthetics") never appear.
+
+## Forms
+
+The contact, careers and newsletter forms post to `/api/contact`, `/api/careers` and `/api/newsletter`. Those routes validate the input (with a honeypot against spam) and forward it to **`FORMS_WEBHOOK_URL`** as multipart form data. That URL can be a Make/Zapier webhook, or a small function that emails `info@medsure.com.cy`.
+
+Until `FORMS_WEBHOOK_URL` is set, the routes return 503 and the forms ask visitors to email or call instead, so no enquiry is silently lost.
 
 ## Deploying
 
@@ -34,6 +56,9 @@ src/
   app/
     layout.tsx           Fonts, metadata, skip link, <MotionArm />
     page.tsx             Homepage — assembles the sections in order
+    <slug>/page.tsx      One route per page, same URLs as the live site
+    api/                 Form endpoints (contact, careers, newsletter)
+    sitemap.ts, robots.ts, not-found.tsx
     globals.css          Design tokens (:root) and motion utilities
     icon.svg             Favicon
     opengraph-image.jpg  Social share image
@@ -55,7 +80,10 @@ src/
     Button.tsx, Logo.tsx, icons.tsx, CountUp.tsx, CurrentYear.tsx
     *.module.css         Styles that sit next to each component
   content/
-    site.ts              All homepage copy, images and data
+    company.ts           Routes, navigation, company details
+    home.ts, about.ts, liability.ts, careers.ts, privacy.ts
+                         All copy, traced to docs/content-inventory.md
+  components/pages/      Page templates (About pages, specialty template, hubs, careers, contact, privacy)
   lib/
     motion.ts            delay(), cx(), prefersReducedMotion()
   assets/
@@ -67,7 +95,7 @@ public/
 
 ### Editing content
 
-All copy lives in `src/content/site.ts`: hero, specialties, reasons, statements, values, steps, FAQs, the closing section and contact details. Change it there and the components update.
+All copy lives in `src/content/*.ts`. Change it there and the components update.
 
 When the client moves to a CMS, replace that module with a fetch that returns the same shapes.
 
@@ -95,9 +123,10 @@ When the client moves to a CMS, replace that module with a fetch that returns th
 - [ ] Have the client approve the AI-generated hero video (`public/video/`), or swap in their own footage at the same file names.
 - [ ] Replace `src/assets/images/*` with the original high-resolution photos. The current files are 1518×730 captures from the live site.
 - [ ] Replace `LogoMark` in `src/components/icons.tsx` with the client's vector logo.
-- [ ] Have the client approve the new copy in `src/content/site.ts`.
-- [ ] Confirm the founding year. The current site says both 1983 and 1973; the copy avoids stating it.
-- [ ] Build out the inner pages (About, the specialty pages, Careers, Contact, Privacy) and point the `#anchor` links at them.
+- [ ] Have the client review the copy in `src/content/` and the open issues table in `docs/content-inventory.md`, including the "shipping liability" wording on Clinics and "bonuses" on Careers.
+- [ ] Set `FORMS_WEBHOOK_URL` so the forms deliver.
+- [ ] Add a Cookie Policy and cookie banner (the Privacy Policy refers to one).
+- [ ] Confirm the founding history. The current site says "established 1983" and also "since 1973"; this site uses 1983.
 - [ ] Add Greek (EL) with Next.js internationalised routing.
 - [ ] Set the production domain in `metadataBase` (`src/app/layout.tsx`).
 - [ ] Fix the current site's footer map link, which points to North Parramatta, Australia instead of Nicosia.

@@ -1,0 +1,13 @@
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.card {
+  min-height: 340px; padding: 26px; border-radius: var(--radius); background: #fff;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
+  transition: transform .6s var(--ease-out);
+}
+.card:hover { transform: translateY(-6px); }
+.num { font-size: 13px; font-weight: 500; color: var(--muted); }
+.title { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; }
+.body { margin-top: 12px; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.dark { background: var(--navy); color: var(--light); }
+.dark .num { color: rgba(242,242,242,.7); }
+.dark .body { color: rgba(242,242,242,.82); }
