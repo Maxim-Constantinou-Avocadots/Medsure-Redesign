@@ -34,12 +34,8 @@ plan changes and test it on the live site.
 
 ## Releases
 
-`main` is the production branch. GitHub Actions builds pushes to `main` and
-releases them to the site identified in `wix.config.json`. Add a Wix deployment
-API key as the GitHub Actions secret `WIX_API_KEY` and run **Deploy Medsure to
-Wix** manually to verify the first automated release. The workflow fails at the
-release step when the key is missing. Keep the key out of the repository.
+The Medsure project is published through the existing [Wix Headless project](https://manage.wix.com/dashboard/3913ac6f-0ec5-4971-8281-d672757373e1). [View the live site](https://medsure-redesign-1-avocadots-1209.wix-site-host.com/).
 
-For local preview, use `npm run build` then `npm run preview` with an
-authenticated Wix CLI. Deploy the hosted branch through the release workflow so
-GitHub remains the source for website code.
+Keep website code in `main` on GitHub. For a code change, save it in GitHub and publish the same revision through the signed-in Wix project. If an edit starts in Wix, bring that code change into GitHub as part of the release so `main` matches the published site.
+
+Changes to form schemas and other Wix-managed data are made in the Wix dashboard. Form submissions are also stored there.
