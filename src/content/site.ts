@@ -1,6 +1,6 @@
 import type { StaticImageData } from "next/image";
 
-import heroPhoto from "@/assets/images/hero.jpg";
+import heroPoster from "@/assets/images/hero-poster.jpg";
 import dentistry from "@/assets/images/dentistry.jpg";
 import aesthetics from "@/assets/images/aesthetics.jpg";
 import clinics from "@/assets/images/clinics.jpg";
@@ -43,7 +43,20 @@ export const navLinks = [
 export const hero = {
   title: "Malpractice cover, written around your practice",
   lead: "Cyprus’s boutique insurance agency for medical professionals — the best medical malpractice cover, with an uncompromising service experience.",
-  photo: { src: heroPhoto, alt: "A doctor with a stethoscope writing at a desk", position: "60% 40%" } as Photo,
+  /**
+   * Background video. Files live in /public/video. Desktop gets 1080p, phones 720p;
+   * WebM (VP9) first for size, MP4 (H.264) as the universal fallback.
+   */
+  video: {
+    poster: heroPoster,
+    alt: "A bright, modern medical clinic with a stethoscope resting on a white desk",
+    sources: [
+      { src: "/video/hero-1080.webm", type: "video/webm", media: "(min-width: 961px)" },
+      { src: "/video/hero-1080.mp4", type: "video/mp4", media: "(min-width: 961px)" },
+      { src: "/video/hero-720.webm", type: "video/webm" },
+      { src: "/video/hero-720.mp4", type: "video/mp4" },
+    ],
+  },
   stats: [
     { label: "Years in insurance", value: 45 },
     { label: "Years in professional liability", value: 30 },

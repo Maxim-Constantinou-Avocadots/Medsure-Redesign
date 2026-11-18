@@ -59,8 +59,10 @@ src/
   lib/
     motion.ts            delay(), cx(), prefersReducedMotion()
   assets/
-    images/              Photography, imported statically
+    images/              Photography and the hero poster frame, imported statically
     fonts/               Inter Tight (variable) and Montserrat, self-hosted (OFL)
+public/
+  video/                 Hero loop: hero-1080 / hero-720, .webm and .mp4
 ```
 
 ### Editing content
@@ -74,6 +76,7 @@ When the client moves to a CMS, replace that module with a fetch that returns th
 | Effect | Implementation |
 | --- | --- |
 | Page-load curtain, word-by-word headline, Ken Burns zoom | CSS keyframes. They run before hydration, so there's no JavaScript cost |
+| Hero video | `HeroVideo`: a server-rendered poster frame is shown first, and the video is attached after hydration and fades in over it. Phones get 720p and desktops 1080p, as WebM (VP9) with an MP4 (H.264) fallback, 240–450 KB for the WebM files. The clip is a 16 s ping-pong loop with no audio. Reduced-motion and Save-Data users keep the poster |
 | Hero counters | `CountUp`: the final value is rendered on the server and animated on the client |
 | Scroll reveals | `<Reveal>` adds `.is-in` when a section enters the viewport. Children with `.rv`, `.rv-img`, `.rv-rule` or `.ltr` animate, staggered with `delay()`, which sets `--d` |
 | Hero and band parallax, rail progress bar | CSS scroll-driven animations (`animation-timeline`). This is progressive enhancement: Chrome, Edge and Safari 26+ animate, and other browsers show a static version |
@@ -89,6 +92,7 @@ When the client moves to a CMS, replace that module with a fetch that returns th
 
 ## Before going live
 
+- [ ] Have the client approve the AI-generated hero video (`public/video/`), or swap in their own footage at the same file names.
 - [ ] Replace `src/assets/images/*` with the original high-resolution photos. The current files are 1518×730 captures from the live site.
 - [ ] Replace `LogoMark` in `src/components/icons.tsx` with the client's vector logo.
 - [ ] Have the client approve the new copy in `src/content/site.ts`.

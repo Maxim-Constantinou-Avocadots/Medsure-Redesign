@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { hero } from "@/content/site";
 import { Button } from "./Button";
 import { CountUp } from "./CountUp";
+import { HeroVideo } from "./HeroVideo";
 import { cx, delay } from "@/lib/motion";
 import styles from "./Hero.module.css";
 
@@ -14,16 +14,7 @@ export function Hero() {
   return (
     <header id="top" className={styles.hero}>
       <div className={styles.media}>
-        <Image
-          src={hero.photo.src}
-          alt={hero.photo.alt}
-          fill
-          preload
-          sizes="100vw"
-          placeholder="blur"
-          className={styles.image}
-          style={{ objectPosition: hero.photo.position }}
-        />
+        <HeroVideo poster={hero.video.poster} alt={hero.video.alt} sources={hero.video.sources} />
       </div>
       <div className={styles.shade} aria-hidden="true" />
 
