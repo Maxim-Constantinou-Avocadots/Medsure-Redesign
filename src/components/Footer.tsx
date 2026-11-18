@@ -1,7 +1,4 @@
 import { aboutLinks, company, liabilityLinks, routes } from "@/content/company";
-import { Reveal } from "./Reveal";
-import { CurrentYear } from "./CurrentYear";
-import { cx, delay } from "@/lib/motion";
 import styles from "./Footer.module.css";
 
 const LETTERS = [
@@ -25,10 +22,10 @@ const columns = [
 
 export function Footer() {
   return (
-    <Reveal as="footer" className={styles.footer}>
+    <footer className={styles.footer}>
       <div className={styles.cols}>
-        {columns.map((col, i) => (
-          <div key={col.title} className="rv" style={delay(i * 80)}>
+        {columns.map((col) => (
+          <div key={col.title}>
             <a href={col.href} className={styles.label}>{col.title}</a>
             <ul className={styles.links}>
               {col.links.map((l) => (
@@ -39,7 +36,7 @@ export function Footer() {
             </ul>
           </div>
         ))}
-        <div className="rv" style={delay(240)}>
+        <div>
           <div className={styles.label}>Visit</div>
           <address className={styles.address}>
             <a href={company.mapUrl} className="ul" target="_blank" rel="noopener noreferrer">
@@ -52,7 +49,7 @@ export function Footer() {
             </a>
           </address>
         </div>
-        <div className="rv" style={delay(320)}>
+        <div>
           <div className={styles.label}>Contact</div>
           <ul className={styles.links}>
             <li><a href={company.phoneHref} className="ul">{company.phone}</a></li>
@@ -64,7 +61,7 @@ export function Footer() {
 
       <div className={styles.mark} aria-hidden="true">
         {LETTERS.map(([letter, weight], i) => (
-          <span key={i} className={cx("ltr", weight === 700 ? "b700" : "b300")} style={delay(100 + i * 60)}>
+          <span key={i} className={weight === 700 ? "b700" : "b300"}>
             {letter}
           </span>
         ))}
@@ -72,7 +69,7 @@ export function Footer() {
 
       <div className={styles.bar}>
         <span>
-          © <CurrentYear /> {company.legalName}. All rights reserved.
+          © {new Date().getUTCFullYear()} {company.legalName}. All rights reserved.
         </span>
         <span className={styles.barRight}>
           <a href={routes.privacy} className="ul">Privacy Policy</a>
@@ -82,6 +79,6 @@ export function Footer() {
           </span>
         </span>
       </div>
-    </Reveal>
+    </footer>
   );
 }

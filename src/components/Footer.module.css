@@ -11,7 +11,7 @@ a.label:hover { color: #fff; }
 .mark {
   display: flex; overflow: hidden;
   padding: 48px clamp(12px, 1.6vw, 24px) 0;
-  font-family: var(--font-logo); font-size: clamp(80px, 17.6vw, 268px); line-height: .9; letter-spacing: -0.02em;
+  font-family: var(--font-logo); font-size: min(17.6vw, 268px); line-height: .9; letter-spacing: -0.02em;
   color: var(--footer-mark); white-space: nowrap; user-select: none;
 }
 .bar {
@@ -20,5 +20,5 @@ a.label:hover { color: #fff; }
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
   font-size: 12px; color: var(--footer-muted);
 }
-.barRight { display: flex; gap: 24px; }
+.barRight { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .bar a { color: var(--bg); }
