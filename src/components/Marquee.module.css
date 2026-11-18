@@ -6,7 +6,8 @@
 }
 .group { display: flex; gap: .45em; padding-right: .45em; align-items: center; }
 .star { color: var(--accent); }
+.filter { position: absolute; }
 @media (any-hover: hover) {
-  .label:hover { color: transparent; -webkit-text-stroke: 1.2px var(--navy); }
+  .label:hover { color: var(--navy); filter: url("#marquee-label-outline"); }
 }
 @keyframes marquee { to { transform: translateX(-50%); } }

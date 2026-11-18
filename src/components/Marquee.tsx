@@ -32,6 +32,15 @@ export function Marquee() {
       }}
       onPointerLeave={() => setSpeed(1)}
     >
+      <svg className={styles.filter} width="0" height="0" aria-hidden="true">
+        <defs>
+          <filter id="marquee-label-outline">
+            {/* Trace the painted text after its overlapping font contours have been filled. */}
+            <feMorphology in="SourceAlpha" operator="erode" radius="1.4" result="interior" />
+            <feComposite in="SourceGraphic" in2="interior" operator="out" />
+          </filter>
+        </defs>
+      </svg>
       <div ref={track} className={styles.track}>
         <Group />
         <Group hidden />
