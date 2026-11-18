@@ -1,0 +1,207 @@
+/* =========================================================
+   Medsure — global tokens, base styles and motion utilities.
+   Section-specific styles live next to each component as
+   CSS Modules (src/components/*.module.css).
+   ========================================================= */
+
+:root {
+  --bg: #e6e6e6;
+  --bg-alt: #f0f0ef;
+  --surface: #f3f3f2;
+  --surface-2: #e3e3e2;
+  --ink: #1e2230;
+  --ink-2: #3e4250;
+  --muted: #5b606c;
+  --muted-2: #8a8e98;
+  --rule: #cfcfce;
+  --track: #d2d2d1;
+  --navy: #1b2346;
+  --navy-hover: #2b3a78;
+  --navy-deep: #141b36;
+  --navy-black: #12172b;
+  --footer-mark: #262d4b;
+  --footer-muted: #9ca1b3;
+  --light: #f2f2f2;
+  --accent: #e8692c;
+
+  --font: var(--font-inter-tight), Arial, sans-serif;
+  --font-logo: var(--font-montserrat), sans-serif;
+
+  --gutter: clamp(20px, 2.2vw, 32px);
+  --radius: 10px;
+  --radius-sm: 4px;
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, p { margin: 0; }
+address { font-style: normal; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute; left: 16px; top: -60px; z-index: 200;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: var(--light); color: var(--navy); font-weight: 600;
+}
+.skip-link:focus { top: 16px; }
+
+.eyebrow { font-size: 13px; font-weight: 500; color: var(--muted); }
+.b700 { font-weight: 700; }
+.b300 { font-weight: 300; }
+
+/* ---------- Load-in (page entrance) ---------- */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+.w > span {
+  display: inline-block; transform: translateY(108%);
+  animation: wordUp 1.15s var(--ease-out) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes wordUp { to { transform: none; } }
+
+.load-in {
+  opacity: 0;
+  animation: fadeUp 1.1s var(--ease-out) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+.load-line {
+  transform: scaleX(0); transform-origin: left;
+  animation: lineDraw 1.2s var(--ease-out) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes lineDraw { to { transform: scaleX(1); } }
+
+/* ---------- Scroll reveals ----------
+   <Reveal> adds .is-in when a section enters the viewport.
+   <MotionArm> adds .js-armed to <html> on the client, so the
+   page is fully visible before hydration and without JS. */
+.js-armed .rv {
+  opacity: 0; transform: translateY(40px); filter: blur(6px);
+  transition: opacity 1s var(--ease-out), transform 1.2s var(--ease-out), filter 1s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.js-armed .is-in .rv { opacity: 1; transform: none; filter: none; }
+
+.js-armed .rv-img {
+  clip-path: inset(100% 0 0 0 round var(--radius));
+  transition: clip-path 1.4s var(--ease-io);
+  transition-delay: var(--d, 0ms);
+}
+.js-armed .is-in .rv-img { clip-path: inset(0 0 0 0 round var(--radius)); }
+
+.js-armed .rv-rule {
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 1.4s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.js-armed .is-in .rv-rule { transform: scaleX(1); }
+
+.ltr { display: inline-block; }
+.js-armed .ltr {
+  transform: translateY(105%);
+  transition: transform 1.2s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.js-armed .is-in .ltr { transform: none; }
+
+/* ---------- Crossfading stacks (switchers, statement band) ---------- */
+.stack { display: grid; }
+.stack > * { grid-area: 1 / 1; }
+.fade-item {
+  opacity: 0; transform: translateY(var(--from, 14px));
+  transition: opacity .5s ease, transform .6s var(--ease-out), filter .6s ease;
+  pointer-events: none;
+}
+.fade-item.is-before { --from: calc(var(--shift, 14px) * -1); }
+.fade-item:not(.is-before) { --from: var(--shift, 14px); }
+.fade-item.is-active { opacity: 1; transform: none; filter: none; pointer-events: auto; }
+
+/* ---------- Scroll-linked parallax (progressive enhancement) ---------- */
+@supports (animation-timeline: scroll()) {
+  .band-par { animation: bandPar linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  @keyframes bandPar {
+    from { transform: translateY(-12%) scale(1.15); }
+    to { transform: translateY(12%) scale(1.15); }
+  }
+}
+
+/* ---------- Links ---------- */
+.ul {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat;
+  padding-bottom: 3px;
+  transition: background-size .45s var(--ease-out);
+}
+.ul:hover { background-size: 100% 1px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; justify-content: space-between;
+  width: 258px; height: 64px; padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--navy); color: #fff;
+  font-size: 13px; font-weight: 500;
+  transition: transform .5s var(--ease-out);
+}
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--navy-hover);
+  transform: translateY(101%);
+  transition: transform .55s var(--ease-out);
+}
+.btn:hover::before { transform: none; }
+.btn .btn__arrow { width: 14px; height: 14px; align-self: flex-end; transition: transform .45s var(--ease-out); }
+.btn:hover .btn__arrow { transform: translateX(5px); }
+.btn:active { transform: scale(.97); }
+
+.btn--light { background: var(--light); color: var(--navy); font-weight: 600; width: 280px; text-align: left; }
+.btn--light::before { background: #fff; }
+
+.btn--glass {
+  background: rgba(255, 255, 255, .12);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.btn--glass::before { background: rgba(255, 255, 255, .18); }
+
+.btn--pill {
+  flex-direction: row-reverse; align-items: center; justify-content: flex-end; gap: 10px;
+  width: auto; height: 46px; padding: 0 20px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, .14);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.btn--pill::before { background: rgba(255, 255, 255, .18); }
+.btn--pill .btn__arrow { align-self: center; }
+
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink); cursor: pointer;
+  transition: background .3s, color .3s, transform .4s var(--ease-out);
+}
+.icon-btn:hover { background: var(--navy); color: #fff; }
+.icon-btn:active { transform: scale(.92); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .w > span, .load-in, .load-line { transform: none !important; opacity: 1 !important; }
+}

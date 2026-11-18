@@ -1,0 +1,48 @@
+.hero {
+  position: relative; min-height: max(820px, 100svh); overflow: hidden;
+  background: #10152a; color: var(--light);
+}
+.media { position: absolute; inset: -40px 0 -200px 0; }
+.image { object-fit: cover; animation: kenburns 2.6s var(--ease-out) .5s both; }
+@keyframes kenburns { from { transform: scale(1.18); } to { transform: scale(1.04); } }
+.shade {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(55% 60% at 88% 28%, rgba(14,19,38,.62) 0%, rgba(14,19,38,0) 70%),
+    linear-gradient(180deg, rgba(14,19,38,.6) 0%, rgba(14,19,38,.15) 35%, rgba(14,19,38,.35) 60%, rgba(14,19,38,.9) 100%);
+}
+
+.stats {
+  position: absolute; z-index: 2; top: 120px; right: var(--gutter);
+  width: min(368px, 28vw); display: flex; flex-direction: column;
+}
+.stat { position: relative; padding: 14px 0 22px; }
+.rule { position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: rgba(255,255,255,.85); }
+.label { font-size: 13px; opacity: .8; }
+.row { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
+.num { font-size: 40px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.dots { font-size: 13px; letter-spacing: 2px; }
+
+.bottom {
+  position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); bottom: 36px;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap;
+}
+.copy { max-width: 760px; }
+.title { font-size: clamp(44px, 5.4vw, 80px); line-height: 1; font-weight: 500; letter-spacing: -0.035em; }
+.lead { margin-top: 22px; max-width: 540px; font-size: 17px; line-height: 1.5; font-weight: 500; color: rgba(242,242,242,.88); }
+.more { width: 200px; height: 84px; padding: 14px; font-size: 14px; }
+
+/* Scroll-linked parallax and fade-out (Chrome, Edge, Safari 26+) */
+@supports (animation-timeline: scroll()) {
+  .media { animation: heroPar linear both; animation-timeline: scroll(root); animation-range: 0 900px; }
+  .out { animation: heroOut linear both; animation-timeline: scroll(root); animation-range: 0 640px; }
+}
+@keyframes heroPar { to { transform: translateY(200px); } }
+@keyframes heroOut { to { opacity: 0; transform: translateY(-70px); } }
+
+@media (max-width: 960px) {
+  .stats, .more { display: none; }
+}
+@media (max-width: 640px) {
+  .image { object-position: 40% 35% !important; }
+}

@@ -1,71 +1,103 @@
 # Medsure — Homepage Redesign
 
-A premium, editorial homepage concept for [Medsure Medicare Insurance Brokers (Cyprus) Ltd](https://www.medsure.com.cy/), designed and built by [Avocadots](https://avocadots.com).
+A premium, editorial homepage for [Medsure Medicare Insurance Brokers (Cyprus) Ltd](https://www.medsure.com.cy/), designed and built by [Avocadots](https://avocadots.com).
 
-Static HTML, CSS and vanilla JavaScript. No build step, no dependencies.
+**Stack:** Next.js 16 (App Router, Turbopack), React 19, TypeScript and CSS Modules. There's no UI or animation library: the motion is plain CSS plus a few small client components.
 
-## Run locally
+## Getting started
 
-Open `index.html` in a browser, or serve the folder so the paths resolve exactly as they will in production:
+Requires Node.js 20.9 or later.
 
 ```bash
-npx serve .
-# or
-python3 -m http.server 8080
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-## Structure
-
-```
-index.html            Page markup
-css/styles.css        All styles, design tokens at the top (:root)
-js/main.js            Interactions and animation logic
-assets/favicon.svg
-assets/images/        Photography (taken from the client's current site)
-```
-
-## Sections
-
-1. Fixed navigation that turns frosted on scroll and hides when you scroll down
-2. Hero with a full-bleed photo, a word-by-word headline reveal and count-up stats
-3. Specialties: a horizontal card rail with arrow controls and a progress bar
-4. Why Medsure: a four-step switcher with image wipe transitions
-5. Statement band: story-style autoplay with progress bars
-6. Values and a founder note
-7. Specialties marquee
-8. How it works, in three steps
-9. FAQ accordion
-10. Closing call to action
-11. Footer with the oversized wordmark
-
-## Motion
-
-| Effect | How it works |
+| Script | What it does |
 | --- | --- |
-| Page-load curtain, hero entrance, Ken Burns zoom | CSS keyframes |
-| Scroll reveals (fade, blur, image wipes, rules, letters) | `IntersectionObserver` adds `.is-in` to each `[data-reveal]` section. Children with `.rv`, `.rv-img`, `.rv-rule` or `.ltr` animate, staggered by the `--d` custom property |
-| Hero and band parallax, specialties rail progress | CSS scroll-driven animations (`animation-timeline`), progressive enhancement: Chrome, Edge and Safari 26+. Other browsers show them static |
-| Counters, nav state, switchers, statement autoplay, FAQ | `js/main.js` |
+| `npm run dev` | Development server |
+| `npm run build` | Production build (the homepage is prerendered as static HTML) |
+| `npm run start` | Serves the production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript, no emit |
 
-Accessibility:
+## Deploying
 
-- Without JavaScript, or with `prefers-reduced-motion: reduce`, every section renders static and fully readable.
-- The statement band only autoplays while it is on screen, and pauses when the tab is hidden.
-- All controls are real `<button>` and `<a>` elements with labels.
+The project works on **Vercel** with no configuration. Import the repo and deploy.
 
-Easing tokens live in `:root` as `--ease-out` and `--ease-io`.
+It also runs on any Node host (`npm run build && npm run start`) or in Docker.
+
+## Project structure
+
+```
+src/
+  app/
+    layout.tsx           Fonts, metadata, skip link, <MotionArm />
+    page.tsx             Homepage — assembles the sections in order
+    globals.css          Design tokens (:root) and motion utilities
+    icon.svg             Favicon
+    opengraph-image.jpg  Social share image
+  components/
+    Nav.tsx              Fixed nav: frosted on scroll, hides on scroll down
+    Hero.tsx             Hero (with CountUp)
+    Specialties.tsx      Card rail with arrow controls
+    Why.tsx              Four-step "Why Medsure" switcher
+    StatementBand.tsx    Story-style autoplaying statements
+    About.tsx            Values and founder note
+    Marquee.tsx          Specialties ticker
+    Steps.tsx            How it works
+    Faq.tsx              Accordion
+    Closing.tsx          Closing call to action
+    Footer.tsx           Footer with the oversized wordmark
+    Reveal.tsx           Scroll-reveal wrapper (IntersectionObserver)
+    MotionArm.tsx        Turns reveals on after hydration
+    Curtain.tsx          Page-load curtain (pure CSS)
+    Button.tsx, Logo.tsx, icons.tsx, CountUp.tsx, CurrentYear.tsx
+    *.module.css         Styles that sit next to each component
+  content/
+    site.ts              All homepage copy, images and data
+  lib/
+    motion.ts            delay(), cx(), prefersReducedMotion()
+  assets/
+    images/              Photography, imported statically
+    fonts/               Inter Tight (variable) and Montserrat, self-hosted (OFL)
+```
+
+### Editing content
+
+All copy lives in `src/content/site.ts`: hero, specialties, reasons, statements, values, steps, FAQs, the closing section and contact details. Change it there and the components update.
+
+When the client moves to a CMS, replace that module with a fetch that returns the same shapes.
+
+## How the motion works
+
+| Effect | Implementation |
+| --- | --- |
+| Page-load curtain, word-by-word headline, Ken Burns zoom | CSS keyframes. They run before hydration, so there's no JavaScript cost |
+| Hero counters | `CountUp`: the final value is rendered on the server and animated on the client |
+| Scroll reveals | `<Reveal>` adds `.is-in` when a section enters the viewport. Children with `.rv`, `.rv-img`, `.rv-rule` or `.ltr` animate, staggered with `delay()`, which sets `--d` |
+| Hero and band parallax, rail progress bar | CSS scroll-driven animations (`animation-timeline`). This is progressive enhancement: Chrome, Edge and Safari 26+ animate, and other browsers show a static version |
+| Switchers and statement band | Elements stacked in one grid cell (`.stack`), crossfaded with `.fade-item` / `.is-active` / `.is-before` |
+| FAQ | Height animated with `grid-template-rows: 0fr → 1fr` |
+
+### Accessibility and fallbacks
+
+- Scroll reveals only switch on after hydration (`html.js-armed`). Without JavaScript, the page renders fully visible.
+- `prefers-reduced-motion: reduce` turns off every animation, the curtain and autoplay.
+- The statement band autoplays only while it's on screen, and pauses when the tab is hidden.
+- All controls are real `<button>` or `<a>` elements with labels and ARIA state. There's a skip link and visible focus rings.
 
 ## Before going live
 
-- [ ] Replace `assets/images/*` with the original high-resolution photos. The current files are 1518×730 captures from the live site.
-- [ ] Replace the inline SVG logo with the client's vector logo.
-- [ ] Have the client approve the new copy: specialty descriptions, "Why Medsure" points, the three steps and the FAQ answers.
-- [ ] Confirm the founding year. The current site says both 1983 and 1973; this page avoids stating it.
-- [ ] Point the nav, card and footer links (currently `#anchors`) to the real inner pages.
-- [ ] Wire up the EN / EL language switch.
+- [ ] Replace `src/assets/images/*` with the original high-resolution photos. The current files are 1518×730 captures from the live site.
+- [ ] Replace `LogoMark` in `src/components/icons.tsx` with the client's vector logo.
+- [ ] Have the client approve the new copy in `src/content/site.ts`.
+- [ ] Confirm the founding year. The current site says both 1983 and 1973; the copy avoids stating it.
+- [ ] Build out the inner pages (About, the specialty pages, Careers, Contact, Privacy) and point the `#anchor` links at them.
+- [ ] Add Greek (EL) with Next.js internationalised routing.
+- [ ] Set the production domain in `metadataBase` (`src/app/layout.tsx`).
 - [ ] Fix the current site's footer map link, which points to North Parramatta, Australia instead of Nicosia.
-- [ ] Optional: convert the images to AVIF or WebP and add `srcset` variants.
 
-## Fonts
+## Plain HTML version
 
-[Inter Tight](https://fonts.google.com/specimen/Inter+Tight) for the interface and [Montserrat](https://fonts.google.com/specimen/Montserrat) for the wordmark, both from Google Fonts.
+The original dependency-free HTML/CSS/JS build is in the repo history (commit `3134fb0`).
