@@ -10,6 +10,8 @@ Use Node.js 24.22.1 or later.
 
 ```sh
 npm ci
+npx wix login
+npx wix env pull
 npm run dev
 npm run typecheck
 npm run build

@@ -23,6 +23,18 @@ jobs:
           node-version: 24.22.3
           cache: npm
       - run: npm ci
+      - name: Configure Wix build environment
+        run: |
+          node --input-type=module <<'JS' >> "$GITHUB_ENV"
+          import { readFileSync } from "node:fs";
+          const { appId } = JSON.parse(readFileSync("wix.config.json", "utf8"));
+          console.log(`WIX_CLIENT_ID=${appId}`);
+          console.log("WIX_CLOUD_PROVIDER=KUBERNETES");
+          // Wix Hosting injects these runtime values when the project is released.
+          console.log("WIX_CLIENT_INSTANCE_ID=set-at-release");
+          console.log("WIX_CLIENT_PUBLIC_KEY=set-at-release");
+          console.log("WIX_CLIENT_SECRET=set-at-release");
+          JS
       - run: npm run typecheck
       - run: npm run build
       - name: Release to Wix
