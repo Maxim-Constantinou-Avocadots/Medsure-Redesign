@@ -1,6 +1,4 @@
-"use client";
-
-import Image, { type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "@/components/SiteImage";
 import { useEffect, useRef, useState } from "react";
 import { cx, prefersReducedMotion } from "@/lib/motion";
 import styles from "./Hero.module.css";
@@ -51,7 +49,7 @@ export function HeroVideo({ poster, alt, sources }: Props) {
         fill
         preload
         sizes="100vw"
-        placeholder="blur"
+
         className={styles.image}
       />
       {enabled && (

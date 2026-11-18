@@ -1,6 +1,4 @@
-"use client";
-
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useState } from "react";
 import { routes } from "@/content/company";
 import { reasons } from "@/content/home";
@@ -93,7 +91,7 @@ export function Why() {
                   alt={r.photo.alt}
                   fill
                   sizes="(max-width: 960px) 100vw, 60vw"
-                  placeholder="blur"
+
                   style={{ objectPosition: r.photo.position }}
                 />
               </div>

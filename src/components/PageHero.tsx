@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/SiteImage";
 import type { ReactNode } from "react";
 import type { Photo } from "@/content/liability";
 import { WordReveal } from "./WordReveal";
@@ -29,7 +28,7 @@ export function PageHero({ crumbs, title, lead, image, aside, compact }: Props) 
           fill
           preload
           sizes="100vw"
-          placeholder="blur"
+
           className={styles.image}
           style={{ objectPosition: image.position }}
         />
@@ -42,7 +41,7 @@ export function PageHero({ crumbs, title, lead, image, aside, compact }: Props) 
             <ol>
               {crumbs.map((c, i) => (
                 <li key={c.label}>
-                  {c.href ? <Link href={c.href} className="ul">{c.label}</Link> : <span aria-current="page">{c.label}</span>}
+                  {c.href ? <a href={c.href} className="ul">{c.label}</a> : <span aria-current="page">{c.label}</span>}
                   {i < crumbs.length - 1 && <span className={styles.sep} aria-hidden="true">/</span>}
                 </li>
               ))}

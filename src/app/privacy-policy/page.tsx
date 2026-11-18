@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { PageMetadata } from "@/lib/site-meta";
 import { PrivacyPage } from "@/components/pages/PrivacyPage";
 
-export const metadata: Metadata = {
+export const metadata: PageMetadata = {
   title: "Privacy Policy",
   description: "How Medsure Medicare Insurance Brokers (Cyprus) Ltd collects, uses and protects personal data.",
   alternates: { canonical: "/privacy-policy" },

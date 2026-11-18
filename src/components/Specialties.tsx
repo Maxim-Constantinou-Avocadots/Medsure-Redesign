@@ -1,7 +1,4 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/SiteImage";
 import { useRef } from "react";
 import { routes } from "@/content/company";
 import type { Specialty } from "@/content/liability";
@@ -62,7 +59,7 @@ export function Specialties({ id, eyebrow, title, items, showHubLink = true, ton
       <div ref={railRef} className={styles.rail}>
         {items.map((item, i) => (
           <div key={item.slug} className={cx(styles.item, "rv")} style={delay(200 + i * 100)}>
-            <Link href={item.href} className={styles.card}>
+            <a href={item.href} className={styles.card}>
               <div className={styles.top}>
                 <div className={styles.img}>
                   <Image
@@ -70,7 +67,7 @@ export function Specialties({ id, eyebrow, title, items, showHubLink = true, ton
                     alt={item.card.alt}
                     fill
                     sizes="(max-width: 960px) 80vw, 330px"
-                    placeholder="blur"
+
                     style={{ objectPosition: item.card.position }}
                   />
                 </div>
@@ -86,7 +83,7 @@ export function Specialties({ id, eyebrow, title, items, showHubLink = true, ton
                   Explore cover <ArrowIcon />
                 </span>
               </div>
-            </Link>
+            </a>
           </div>
         ))}
       </div>

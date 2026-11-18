@@ -1,0 +1,37 @@
+name: Deploy Medsure to Wix
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wix-production
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.3
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Release to Wix
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+        run: |
+          if [ -z "$WIX_API_KEY" ]; then
+            echo "::error::Configure the WIX_API_KEY GitHub Actions secret before deploying."
+            exit 1
+          fi
+          npx --no-install wix login --api-key "$WIX_API_KEY"
+          npm run release -- --version-type minor --comment "GitHub Actions ${{ github.sha }}"

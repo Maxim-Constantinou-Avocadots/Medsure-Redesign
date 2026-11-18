@@ -28,7 +28,7 @@ export const careers = {
     body: "Our human resources department takes care of the welfare of our employees, and of improving their professionalism and progress in the company.",
   },
   apply: {
-    title: "Apply now by sending your CV",
+    title: "Apply now",
   },
   team: {
     title: "Our team",

@@ -1,4 +1,4 @@
-import type { StaticImageData } from "next/image";
+import type { StaticImageData } from "@/components/SiteImage";
 import { routes } from "./company";
 
 import dentistryCard from "@/assets/images/dentistry.jpg";

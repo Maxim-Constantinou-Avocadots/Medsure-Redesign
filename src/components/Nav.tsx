@@ -1,7 +1,3 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { company, mainNav, routes } from "@/content/company";
 import { Logo } from "./Logo";
@@ -22,29 +18,13 @@ function isActive(pathname: string, href: string, children?: { href: string }[])
  * Fixed nav: transparent over the hero, frosted once scrolled, hides on scroll down.
  * Desktop: dropdown panels on hover / keyboard focus. Mobile: full-screen menu.
  */
-export function Nav() {
-  const pathname = usePathname();
+export function Nav({ pathname }: { pathname: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const lastY = useRef(0);
   const navRef = useRef<HTMLElement>(null);
-  const [prevPath, setPrevPath] = useState(pathname);
-
-  // Close the mobile menu whenever the route changes
-  if (prevPath !== pathname) {
-    setPrevPath(pathname);
-    setMenuOpen(false);
-    setOpenSection(null);
-  }
-
-  // After navigating from a dropdown, drop focus so the panel (opened by :focus-within) closes
-  useEffect(() => {
-    const active = document.activeElement;
-    if (active instanceof HTMLElement && navRef.current?.contains(active)) active.blur();
-  }, [pathname]);
-
   useEffect(() => {
     let ticking = false;
     const update = () => {
@@ -87,39 +67,39 @@ export function Nav() {
         className={cx(styles.nav, (scrolled || menuOpen) && styles.scrolled, hidden && !menuOpen && styles.hidden)}
         onFocus={() => setHidden(false)}
       >
-        <Link href={routes.home} className="load-in" style={delay("0.15s")} aria-label="Medsure home">
+        <a href={routes.home} className="load-in" style={delay("0.15s")} aria-label="Medsure home">
           <Logo />
-        </Link>
+        </a>
 
         <ul className={cx(styles.links, "load-in")} style={delay("0.25s")}>
           {mainNav.map((item) => (
             <li key={item.href} className={styles.item}>
-              <Link
+              <a
                 href={item.href}
                 className={cx("ul", styles.top, isActive(pathname, item.href, item.children) && styles.active)}
                 aria-current={pathname === item.href ? "page" : undefined}
               >
                 {item.label}
                 {item.children && <ChevronDown className={styles.chev} />}
-              </Link>
+              </a>
               {item.children && (
                 <div className={styles.panel}>
                   <div className={styles.panelInner}>
-                    <Link href={item.href} className={styles.panelLead}>
+                    <a href={item.href} className={styles.panelLead}>
                       <span>{item.label}</span>
                       <ArrowIcon />
-                    </Link>
+                    </a>
                     <ul className={styles.panelList}>
                       {item.children.map((child) => (
                         <li key={child.href}>
-                          <Link
+                          <a
                             href={child.href}
                             className={cx(styles.panelLink, pathname === child.href && styles.panelActive)}
                             aria-current={pathname === child.href ? "page" : undefined}
                           >
                             <span className={styles.panelLabel}>{child.label}</span>
                             {child.description && <span className={styles.panelDesc}>{child.description}</span>}
-                          </Link>
+                          </a>
                         </li>
                       ))}
                     </ul>
@@ -153,10 +133,10 @@ export function Nav() {
         </div>
       </nav>
 
-      <div id="mobile-menu" className={cx(styles.mobile, menuOpen && styles.mobileOpen)} aria-hidden={!menuOpen} inert={!menuOpen}>
+      <div id="mobile-menu" className={cx(styles.mobile, menuOpen && styles.mobileOpen)} aria-hidden={!menuOpen} {...(!menuOpen ? { inert: "" } : {})}>
         <ul className={styles.mList}>
           <li className={styles.mItem}>
-            <Link href={routes.home} className={styles.mTop}>Home</Link>
+            <a href={routes.home} className={styles.mTop}>Home</a>
           </li>
           {mainNav.map((item, i) => (
             <li key={item.href} className={styles.mItem} style={delay(`${80 + i * 50}ms`)}>
@@ -173,17 +153,17 @@ export function Nav() {
                   </button>
                   <div className={cx(styles.mPanel, openSection === item.href && styles.mPanelOpen)}>
                     <div>
-                      <Link href={item.href} className={styles.mSub}>Overview</Link>
+                      <a href={item.href} className={styles.mSub}>Overview</a>
                       {item.children.map((child) => (
-                        <Link key={child.href} href={child.href} className={styles.mSub}>
+                        <a key={child.href} href={child.href} className={styles.mSub}>
                           {child.label}
-                        </Link>
+                        </a>
                       ))}
                     </div>
                   </div>
                 </>
               ) : (
-                <Link href={item.href} className={styles.mTop}>{item.label}</Link>
+                <a href={item.href} className={styles.mTop}>{item.label}</a>
               )}
             </li>
           ))}

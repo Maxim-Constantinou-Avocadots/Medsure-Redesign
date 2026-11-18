@@ -1,4 +1,4 @@
-import Image, { type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "@/components/SiteImage";
 import { company } from "@/content/company";
 import { closingDefaults } from "@/content/home";
 import closingImage from "@/assets/images/paramedicine.jpg";

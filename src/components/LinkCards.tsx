@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/SiteImage";
 import type { Photo } from "@/content/liability";
 import { ArrowIcon } from "./icons";
 import { cx, delay } from "@/lib/motion";
@@ -13,9 +12,9 @@ export function LinkCards({ items }: { items: LinkCard[] }) {
     <ul className={styles.grid}>
       {items.map((item, i) => (
         <li key={item.href} className="rv" style={delay(120 + (i % 3) * 100)}>
-          <Link href={item.href} className={styles.card}>
+          <a href={item.href} className={styles.card}>
             <div className={styles.img}>
-              <Image src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" placeholder="blur" style={{ objectPosition: item.image.position }} />
+              <Image src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: item.image.position }} />
             </div>
             <div className={styles.body}>
               <div className={styles.row}>
@@ -27,7 +26,7 @@ export function LinkCards({ items }: { items: LinkCard[] }) {
                 Learn more <ArrowIcon />
               </span>
             </div>
-          </Link>
+          </a>
         </li>
       ))}
     </ul>
@@ -37,7 +36,7 @@ export function LinkCards({ items }: { items: LinkCard[] }) {
 export function CardImage({ image, className }: { image: Photo; className?: string }) {
   return (
     <div className={cx(styles.feature, "rv-img", className)}>
-      <Image src={image.src} alt={image.alt} fill sizes="(max-width: 900px) 100vw, 45vw" placeholder="blur" style={{ objectPosition: image.position }} />
+      <Image src={image.src} alt={image.alt} fill sizes="(max-width: 900px) 100vw, 45vw" style={{ objectPosition: image.position }} />
     </div>
   );
 }

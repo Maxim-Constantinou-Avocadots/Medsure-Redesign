@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { specialties } from "@/content/liability";
 import { cx } from "@/lib/motion";
 import styles from "./SpecialtyTabs.module.css";
@@ -10,13 +9,13 @@ export function SpecialtyTabs({ current }: { current: string }) {
       <ul className={styles.list}>
         {specialties.map((s) => (
           <li key={s.slug}>
-            <Link
+            <a
               href={s.href}
               className={cx(styles.tab, s.href === current && styles.active)}
               aria-current={s.href === current ? "page" : undefined}
             >
               {s.title}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

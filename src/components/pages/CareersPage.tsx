@@ -46,7 +46,7 @@ export function CareersPage() {
               <h2 className={cx(styles.applyTitle, "rv")} style={delay(120)}>{careers.apply.title}</h2>
             </div>
             <div className={cx(styles.formCard, "rv")} style={delay(180)}>
-              <CareersForm positions={careers.roles.map((r) => r.title)} />
+              <CareersForm />
             </div>
           </div>
         </Section>

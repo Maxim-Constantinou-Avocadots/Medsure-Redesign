@@ -1,0 +1,9 @@
+---
+import NotFound from "@/app/not-found";
+import Layout from "@/layouts/Layout.astro";
+
+Astro.response.status = 404;
+---
+<Layout metadata={{ title: "Page not found" }}>
+  <NotFound />
+</Layout>

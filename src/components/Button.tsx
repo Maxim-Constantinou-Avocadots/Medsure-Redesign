@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowIcon } from "./icons";
 import { cx } from "@/lib/motion";
@@ -22,9 +21,9 @@ export function Button({ href, children, variant = "dark", className, style }: P
   );
   if (href.startsWith("/")) {
     return (
-      <Link href={href} className={classes} style={style}>
+      <a href={href} className={classes} style={style}>
         {inner}
-      </Link>
+      </a>
     );
   }
   return (

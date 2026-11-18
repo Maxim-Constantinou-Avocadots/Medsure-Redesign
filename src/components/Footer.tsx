@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { aboutLinks, company, liabilityLinks, routes } from "@/content/company";
 import { Reveal } from "./Reveal";
 import { CurrentYear } from "./CurrentYear";
@@ -30,11 +29,11 @@ export function Footer() {
       <div className={styles.cols}>
         {columns.map((col, i) => (
           <div key={col.title} className="rv" style={delay(i * 80)}>
-            <Link href={col.href} className={styles.label}>{col.title}</Link>
+            <a href={col.href} className={styles.label}>{col.title}</a>
             <ul className={styles.links}>
               {col.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="ul">{l.label}</Link>
+                  <a href={l.href} className="ul">{l.label}</a>
                 </li>
               ))}
             </ul>
@@ -76,7 +75,7 @@ export function Footer() {
           © <CurrentYear /> {company.legalName}. All rights reserved.
         </span>
         <span className={styles.barRight}>
-          <Link href={routes.privacy} className="ul">Privacy Policy</Link>
+          <a href={routes.privacy} className="ul">Privacy Policy</a>
           <span>
             Made fresh by{" "}
             <a href="https://avocadots.com" className="ul" target="_blank" rel="noopener noreferrer">avocadots</a>

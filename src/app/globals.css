@@ -211,3 +211,29 @@ address { font-style: normal; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .w > span, .load-in, .load-line { transform: none !important; opacity: 1 !important; }
 }
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("../assets/fonts/InterTight-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("../assets/fonts/Montserrat-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("../assets/fonts/Montserrat-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --font-inter-tight: "Inter Tight";
+  --font-montserrat: Montserrat;
+}

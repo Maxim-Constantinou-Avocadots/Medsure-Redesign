@@ -1,182 +1,131 @@
-"use client";
-
-import Link from "next/link";
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useContext, useId, type FormEvent } from "react";
 import { company, routes } from "@/content/company";
-import { ArrowIcon } from "./icons";
+import { FORM_ERROR, useWixForm } from "@/hooks/forms/useWixForm";
 import { cx } from "@/lib/motion";
+import type { FormFieldDto } from "@/wix/forms/types";
+import { FormSchema } from "./FormSchemaProvider";
+import { ArrowIcon } from "./icons";
 import styles from "./Form.module.css";
 
-type Status = "idle" | "sending" | "sent" | "error" | "offline";
+type FormState = ReturnType<typeof useWixForm>;
 
-/** Shared form shell: posts multipart data to `action`, handles states, honeypot and messages. */
-export function FormShell({
-  action,
-  submitLabel,
-  successTitle,
-  successBody,
-  children,
-  tone = "light",
-  inline,
-}: {
-  action: string;
-  submitLabel: string;
-  successTitle: string;
-  successBody: string;
-  children: ReactNode;
-  tone?: "light" | "dark";
-  inline?: boolean;
-}) {
-  const [status, setStatus] = useState<Status>("idle");
+function FormField({ field, state }: { field: FormFieldDto; state: FormState }) {
+  const id = useId();
+  const error = state.errors[field.target];
+  const props = {
+    ...state.bind(field.target),
+    id,
+    disabled: field.readOnly,
+    required: field.required,
+    "aria-describedby": [field.description && `${id}-help`, error && `${id}-error`].filter(Boolean).join(" ") || undefined,
+  };
+  const { control, label, required, showLabel } = field;
+  const indicator = state.form?.requiredIndicator;
+  const requiredText = required && indicator !== "NONE" ? (indicator === "TEXT" ? " (Required)" : " *") : "";
+  const inputClass = cx(styles.input, control === "select" && styles.select);
+  const isName = field.identifier === "CONTACTS_FIRST_NAME" || field.identifier === "CONTACTS_LAST_NAME";
+  const wide = !isName && control !== "checkbox";
+  const autoComplete = control === "email" ? "email" : control === "phone" ? "tel" :
+    field.identifier === "CONTACTS_FIRST_NAME" ? "given-name" :
+    field.identifier === "CONTACTS_LAST_NAME" ? "family-name" : undefined;
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (!form.reportValidity()) return;
-    setStatus("sending");
-    try {
-      const res = await fetch(action, { method: "POST", body: new FormData(form) });
-      if (res.ok) {
-        setStatus("sent");
-        form.reset();
-      } else {
-        setStatus(res.status === 503 ? "offline" : "error");
-      }
-    } catch {
-      setStatus("offline");
-    }
+  return (
+    <div className={cx(styles.field, wide && styles.span2)}>
+      <label className={showLabel ? styles.label : "sr-only"} htmlFor={id}>
+        {state.form?.requiredIndicatorBefore && <span aria-hidden="true">{requiredText} </span>}
+        {label}
+        {!state.form?.requiredIndicatorBefore && <span aria-hidden="true">{requiredText}</span>}
+      </label>
+      {control === "textarea" ? (
+        <textarea {...props} rows={5} placeholder={field.placeholder} className={cx(inputClass, styles.textarea)} />
+      ) : control === "select" ? (
+        <select {...props} className={inputClass}>
+          <option value="">{field.placeholder ?? "Select…"}</option>
+          {field.choices.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+        </select>
+      ) : control === "checkbox" ? (
+        <input
+          {...props}
+          type="checkbox"
+          value="true"
+          checked={state.values[field.target] === true}
+          onChange={(event) => state.setValues((values) => ({ ...values, [field.target]: event.target.checked }))}
+        />
+      ) : control === "file" ? (
+        <input
+          {...props}
+          type="file"
+          value={undefined}
+          className={inputClass}
+          accept={field.validation.accept}
+          multiple={(field.validation.fileLimit ?? 1) > 1}
+          onChange={(event) => {
+            const files = Array.from(event.currentTarget.files ?? []);
+            state.setValues((values) => ({ ...values, [field.target]: files }));
+          }}
+        />
+      ) : (
+        <input
+          {...props}
+          type={control === "phone" ? "tel" : control}
+          autoComplete={autoComplete}
+          placeholder={field.placeholder ?? (control === "phone" && field.phoneCountry === "CY" ? "+357" : undefined)}
+          className={inputClass}
+        />
+      )}
+      {field.description && <small id={`${id}-help`}>{field.description}</small>}
+      {error && <p id={`${id}-error`} className={styles.error} role="alert">{error}</p>}
+    </div>
+  );
+}
+
+export function MedsureForm({ formId, inline = false }: { formId: string; inline?: boolean }) {
+  const initialForm = useContext(FormSchema);
+  const state = useWixForm(formId, { initialForm });
+  const { form, errors, loading, closed, outcome, step } = state;
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    const response = await state.submit(event);
+    if (!response || !response.url) return;
+    window.location.assign(response.url);
   }
 
-  if (status === "sent") {
+  if (outcome) {
     return (
-      <div className={cx(styles.done, tone === "dark" && styles.doneDark)} role="status">
-        <div className={styles.doneMark} aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </div>
-        <h3 className={styles.doneTitle}>{successTitle}</h3>
-        <p className={styles.doneBody}>{successBody}</p>
+      <div className={cx(styles.done, inline && styles.doneDark)} role="status">
+        {(outcome.message ?? "Thank you. Your submission was received.").split("\n").map((line, index) => (
+          <p key={index} className={styles.doneBody}>{line}</p>
+        ))}
       </div>
     );
   }
 
+  if (closed) return <p role="status">{form?.disabledMessage || "This form is no longer accepting submissions."}</p>;
+  if (!form) {
+    return errors[FORM_ERROR] ? (
+      <p className={styles.error} role="alert">
+        {errors[FORM_ERROR]} Please email <a href={`mailto:${company.email}`}>{company.email}</a>.
+      </p>
+    ) : <p role="status">Loading form…</p>;
+  }
+
+  const activeStep = form.steps[step];
+  const hasNextStep = step < form.steps.length - 1;
+  const fields = form.fields.filter((field) => !field.hidden && (!activeStep || field.stepId === activeStep.id));
+
   return (
-    <form className={cx(styles.form, inline && styles.inline, tone === "dark" && styles.dark)} onSubmit={onSubmit} noValidate={false}>
-      {/* Honeypot: hidden from people, tempting for bots */}
-      <div className={styles.hp} aria-hidden="true">
-        <label>
-          Company
-          <input type="text" name="company" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-      {children}
+    <form className={cx(styles.form, inline && styles.inline, inline && styles.dark)} noValidate onSubmit={hasNextStep ? state.next : onSubmit}>
+      {form.steps.length > 1 && <p className={styles.span2}>Step {step + 1} of {form.steps.length}{activeStep?.name && ` · ${activeStep.name}`}</p>}
+      {fields.map((field) => <FormField key={field.target} field={field} state={state} />)}
       <div className={styles.footer}>
-        <button type="submit" className={cx("btn", tone === "dark" && "btn--light", styles.submit)} disabled={status === "sending"}>
-          <span>{status === "sending" ? "Sending…" : submitLabel}</span>
+        {step > 0 && <button type="button" className="btn" onClick={state.previous}>{form.previousText || "Back"}</button>}
+        <button type="submit" className={cx("btn", inline && "btn--light", styles.submit)} disabled={loading}>
+          <span>{loading ? "Sending…" : hasNextStep ? form.nextText || "Continue" : form.submitText || "Submit"}</span>
           <ArrowIcon className="btn__arrow" />
         </button>
-        {!inline && (
-          <p className={styles.note}>
-            We use your details only to respond to you. See our <Link href={routes.privacy} className="ul">Privacy Policy</Link>.
-          </p>
-        )}
+        {!inline && <p className={styles.note}>See how we handle your information in our <a href={routes.privacy} className="ul">Privacy Policy</a>.</p>}
       </div>
-      {(status === "error" || status === "offline") && (
-        <p className={styles.error} role="alert">
-          {status === "offline"
-            ? "Online messages aren't available just yet. "
-            : "Something went wrong sending your message. "}
-          Please email <a href={`mailto:${company.email}`} className="ul">{company.email}</a> or call{" "}
-          <a href={company.phoneHref} className="ul">{company.phone}</a>.
-        </p>
-      )}
+      {errors[FORM_ERROR] && <p className={styles.error} role="alert">{errors[FORM_ERROR]}</p>}
     </form>
-  );
-}
-
-type FieldProps = {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-  autoComplete?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  span?: 1 | 2;
-  className?: string;
-};
-
-export function Field({ label, name, type = "text", required, autoComplete, placeholder, defaultValue, span = 1, className }: FieldProps) {
-  const id = useId();
-  return (
-    <div className={cx(styles.field, span === 2 && styles.span2, className)}>
-      <label htmlFor={id} className={styles.label}>
-        {label}
-        {required && <span aria-hidden="true"> *</span>}
-      </label>
-      <input
-        id={id}
-        name={name}
-        type={type}
-        required={required}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-        className={styles.input}
-      />
-    </div>
-  );
-}
-
-export function TextArea({ label, name, required, span = 2 }: Omit<FieldProps, "type">) {
-  const id = useId();
-  return (
-    <div className={cx(styles.field, span === 2 && styles.span2)}>
-      <label htmlFor={id} className={styles.label}>
-        {label}
-        {required && <span aria-hidden="true"> *</span>}
-      </label>
-      <textarea id={id} name={name} required={required} rows={5} className={cx(styles.input, styles.textarea)} />
-    </div>
-  );
-}
-
-export function Select({ label, name, options, required, span = 2 }: Omit<FieldProps, "type"> & { options: string[] }) {
-  const id = useId();
-  return (
-    <div className={cx(styles.field, span === 2 && styles.span2)}>
-      <label htmlFor={id} className={styles.label}>
-        {label}
-        {required && <span aria-hidden="true"> *</span>}
-      </label>
-      <select id={id} name={name} required={required} className={cx(styles.input, styles.select)} defaultValue="">
-        <option value="" disabled>
-          Select…
-        </option>
-        {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-/** Country calling code + phone number on one row (mirrors the live site's "Code" + "Phone"). */
-export function PhoneField({ required }: { required?: boolean }) {
-  const codeId = useId();
-  const phoneId = useId();
-  return (
-    <div className={cx(styles.field, styles.span2)}>
-      <span className={styles.label} id={`${phoneId}-l`}>
-        Phone{required && <span aria-hidden="true"> *</span>}
-      </span>
-      <div className={styles.phone} role="group" aria-labelledby={`${phoneId}-l`}>
-        <label htmlFor={codeId} className="sr-only">Country code</label>
-        <input id={codeId} name="code" defaultValue="+357" autoComplete="tel-country-code" className={cx(styles.input, styles.code)} />
-        <label htmlFor={phoneId} className="sr-only">Phone number</label>
-        <input id={phoneId} name="phone" type="tel" required={required} autoComplete="tel-national" className={styles.input} />
-      </div>
-    </div>
   );
 }

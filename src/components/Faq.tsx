@@ -1,5 +1,3 @@
-"use client";
-
 import { useId, useState } from "react";
 import { routes } from "@/content/company";
 import { faqs } from "@/content/home";
