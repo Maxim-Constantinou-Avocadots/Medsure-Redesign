@@ -1,0 +1,17 @@
+.curtain {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--navy-black); pointer-events: none;
+  animation: curtainUp 1.05s var(--ease-io) .55s forwards;
+}
+.logo {
+  color: #fff; font-family: var(--font-logo); font-size: 28px; letter-spacing: .02em;
+  opacity: 0; animation: curtainLogo 1s var(--ease-out) .05s forwards;
+}
+@keyframes curtainUp { to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes curtainLogo {
+  0% { opacity: 0; transform: translateY(14px); }
+  60% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+@media (prefers-reduced-motion: reduce) { .curtain { display: none; } }

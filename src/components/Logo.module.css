@@ -1,0 +1,8 @@
+.logo { display: flex; align-items: center; gap: 10px; color: #fff; }
+.mark { width: 22px; height: 34px; }
+.text { display: flex; flex-direction: column; line-height: 1; }
+.word { font-family: var(--font-logo); font-size: 21px; letter-spacing: .02em; }
+.sub {
+  font-family: var(--font-logo); font-weight: 300; font-size: 8.5px;
+  letter-spacing: .42em; margin-top: 4px; opacity: .75;
+}

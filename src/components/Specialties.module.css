@@ -1,0 +1,50 @@
+.section { padding: clamp(64px, 7vw, 104px) 0; }
+.head {
+  padding: 0 var(--gutter);
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap;
+}
+.headCopy { max-width: 880px; }
+.eyebrow { display: flex; gap: 10px; align-items: center; margin-bottom: 26px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.title { font-size: clamp(34px, 3.8vw, 56px); line-height: 1.02; font-weight: 500; letter-spacing: -0.03em; }
+.actions { display: flex; gap: 10px; align-items: flex-end; }
+.arrows { display: flex; gap: 6px; }
+.arrows button { width: 48px; height: 64px; }
+
+.rail {
+  margin-top: clamp(48px, 5vw, 72px);
+  display: flex; gap: 16px; overflow-x: auto;
+  padding: 12px var(--gutter) 8px;
+  scroll-snap-type: x mandatory; scroll-padding-left: var(--gutter); scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.item { flex: 0 0 auto; width: clamp(272px, 22vw, 330px); scroll-snap-align: start; }
+
+.card { display: flex; flex-direction: column; gap: 8px; transition: transform .6s var(--ease-out); }
+.card:hover { transform: translateY(-8px); }
+.top { background: var(--surface); border-radius: var(--radius); padding: 10px 10px 16px; }
+.img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 6px; }
+.img img { object-fit: cover; transition: transform 1.1s var(--ease-out); }
+.card:hover .img img { transform: scale(1.07); }
+.cardTitle { display: flex; justify-content: space-between; margin-top: 14px; font-size: 16px; font-weight: 500; }
+.cardTitle span:last-child { color: var(--muted-2); }
+.body { background: var(--surface); border-radius: var(--radius); padding: 16px 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.label { font-size: 12px; font-weight: 500; color: var(--muted); }
+.text { font-size: 14px; line-height: 1.45; }
+.more { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; font-weight: 600; }
+.more svg { width: 12px; height: 12px; opacity: 0; transform: translateX(-8px); transition: opacity .4s, transform .5s var(--ease-out); }
+.card:hover .more svg { opacity: 1; transform: none; }
+
+.progress { margin: 28px var(--gutter) 0; width: min(320px, 40%); height: 2px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.progressBar { height: 100%; background: var(--navy); transform-origin: left; transform: scaleX(.18); }
+
+/* Rail progress follows horizontal scroll (Chrome, Edge, Safari 26+) */
+@supports (animation-timeline: scroll()) {
+  .section { timeline-scope: --rail; }
+  .rail { scroll-timeline: --rail x; }
+  .progressBar { animation: railBar linear both; animation-timeline: --rail; }
+}
+@keyframes railBar { from { transform: scaleX(.18); } to { transform: scaleX(1); } }
+
+@media (max-width: 960px) { .arrows { display: none; } }
