@@ -18,7 +18,7 @@ type Props = {
   tone?: "base" | "alt";
 };
 
-/** Horizontal rail of specialty cards, each linking to its page. */
+/** Specialty cards display in a desktop rail and a mobile grid. */
 export function Specialties({ id, eyebrow, title, items, showHubLink = true, tone = "base" }: Props) {
   const railRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +59,7 @@ export function Specialties({ id, eyebrow, title, items, showHubLink = true, ton
       <div ref={railRef} className={styles.rail}>
         {items.map((item, i) => (
           <div key={item.slug} className={cx(styles.item, "rv")} style={delay(200 + i * 100)}>
-            <a href={item.href} className={styles.card}>
+            <a href={item.href} className={styles.card} aria-labelledby={`specialty-${id ?? "related"}-${item.slug}`}>
               <div className={styles.top}>
                 <div className={styles.img}>
                   <Image
@@ -71,16 +71,16 @@ export function Specialties({ id, eyebrow, title, items, showHubLink = true, ton
                     style={{ objectPosition: item.card.position }}
                   />
                 </div>
-                <h3 className={styles.cardTitle}>
+                <h3 id={`specialty-${id ?? "related"}-${item.slug}`} className={styles.cardTitle}>
                   <span>{item.title}</span>
-                  <span>{String(i + 1).padStart(2, "0")}</span>
+                  <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 </h3>
               </div>
               <div className={styles.body}>
                 <div className={styles.label}>Coverage overview</div>
                 <p className={styles.text}>{item.summary}</p>
                 <span className={styles.more}>
-                  Explore cover <ArrowIcon />
+                  View cover <ArrowIcon />
                 </span>
               </div>
             </a>

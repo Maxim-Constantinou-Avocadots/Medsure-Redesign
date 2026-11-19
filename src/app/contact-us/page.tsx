@@ -9,6 +9,6 @@ export const metadata: PageMetadata = {
   alternates: { canonical: "/contact-us" },
 };
 
-export default function ContactUsRoute({ initialForm }: { initialForm?: FormDto }) {
-  return <FormSchemaProvider form={initialForm}><ContactPage /></FormSchemaProvider>;
+export default function ContactUsRoute({ initialForm, specialty }: { initialForm?: FormDto; specialty?: string }) {
+  return <FormSchemaProvider form={initialForm}><ContactPage specialty={specialty} /></FormSchemaProvider>;
 }

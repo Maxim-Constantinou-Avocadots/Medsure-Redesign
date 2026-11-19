@@ -1,43 +1,41 @@
 import { company } from "@/content/company";
 import { ContactForm } from "./ContactForm";
-import { Reveal } from "./Reveal";
-import { cx, delay } from "@/lib/motion";
+import { cx } from "@/lib/motion";
 import styles from "./ContactSection.module.css";
 
-type Props = { id?: string; eyebrow: string; title: string; lead?: string; tone?: "base" | "alt" };
+type Props = {
+  id?: string;
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  tone?: "base" | "alt";
+  specialty?: string;
+};
 
-/** Contact details + message form. Same block on the homepage and the Contact page. */
-export function ContactSection({ id, eyebrow, title, lead, tone = "alt" }: Props) {
-  const details = [
-    { label: "Address", value: company.address.join(", "), href: company.mapUrl, external: true },
-    { label: "Email", value: company.email, href: `mailto:${company.email}` },
-    { label: "Phone", value: company.phone, href: company.phoneHref },
-  ];
+/** Shared contact details and Wix enquiry form. */
+export function ContactSection({ id, eyebrow, title, lead, tone = "alt", specialty }: Props) {
   return (
-    <Reveal id={id} className={cx(styles.section, tone === "alt" && styles.alt)}>
+    <section id={id} className={cx(styles.section, tone === "alt" && styles.alt)}>
       <div className={styles.left}>
-        <div className={cx("eyebrow rv", styles.eyebrow)}>
+        <div className={cx("eyebrow", styles.eyebrow)}>
           <span className={styles.dot} aria-hidden="true" />
           {eyebrow}
         </div>
-        <h2 className={cx(styles.title, "rv")} style={delay(120)}>{title}</h2>
-        {lead && <p className={cx(styles.lead, "rv")} style={delay(180)}>{lead}</p>}
-        <dl className={styles.details}>
-          {details.map((d, i) => (
-            <div key={d.label} className={cx(styles.detail, "rv")} style={delay(240 + i * 80)}>
-              <dt>{d.label}</dt>
-              <dd>
-                <a href={d.href} className="ul" {...(d.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
-                  {d.value}
-                </a>
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <h2 className={styles.title}>{title}</h2>
+        {lead && <p className={styles.lead}>{lead}</p>}
+        <p className={styles.channels}>
+          <a href={company.phoneHref}>Call {company.phone}</a>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </p>
       </div>
-      <div className={cx(styles.right, "rv")} style={delay(200)}>
-        <ContactForm />
+      <div className={styles.right}>
+        {specialty && <p className={styles.context}>Enquiring about <strong>{specialty}</strong></p>}
+        <ContactForm specialty={specialty} />
       </div>
-    </Reveal>
+      <address className={styles.address}>
+        <strong>Visit our office</strong>
+        <a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.join(", ")}</a>
+      </address>
+    </section>
   );
 }

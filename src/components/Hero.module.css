@@ -1,5 +1,5 @@
 .hero {
-  position: relative; min-height: max(820px, 100svh); overflow: hidden;
+  position: relative; min-height: max(660px, 84svh); overflow: hidden;
   background: #10152a; color: var(--light);
 }
 .media { position: absolute; inset: -40px 0; }
@@ -41,7 +41,9 @@
 .copy { max-width: 760px; }
 .title { font-size: clamp(44px, 5.4vw, 80px); line-height: 1; font-weight: 500; letter-spacing: -0.035em; }
 .lead { margin-top: 22px; max-width: 540px; font-size: 17px; line-height: 1.5; font-weight: 500; color: rgba(242,242,242,.88); }
-.more { width: 200px; height: 84px; padding: 14px; font-size: 14px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.actions a { width: auto; min-width: 195px; max-width: 100%; height: 54px; flex-direction: row; align-items: center; gap: 16px; font-size: 14px; }
+.actions a svg { align-self: center; flex: none; }
 
 /* Scroll-linked parallax and fade-out (Chrome, Edge, Safari 26+) */
 @supports (animation-timeline: scroll()) {
@@ -52,8 +54,14 @@
 @keyframes heroOut { to { opacity: 0; transform: translateY(-70px); } }
 
 @media (max-width: 960px) {
-  .stats, .more { display: none; }
+  .stats { display: none; }
 }
 @media (max-width: 640px) {
+  .hero { min-height: 0; }
+  .bottom { position: relative; inset: auto; padding: clamp(156px, 30svh, 236px) var(--gutter) 34px; }
+  .title { font-size: clamp(38px, 10vw, 54px); }
+  .lead { margin-top: 14px; }
+  .actions { gap: 8px; margin-top: 18px; }
+  .actions a { min-width: 0; width: 100%; height: 48px; }
   .image, .video { object-position: 45% 50% !important; }
 }

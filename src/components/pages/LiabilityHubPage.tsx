@@ -16,7 +16,7 @@ export function LiabilityHubPage() {
         title={liabilityHub.title}
         lead={liabilityHub.lead}
         image={liabilityHub.hero}
-        aside={<Button href={routes.contact} variant="glass">Contact us</Button>}
+        actions={<Button href={`${routes.contact}#enquiry`} variant="light">Make an enquiry</Button>}
       />
       <main id="main">
         <Section>

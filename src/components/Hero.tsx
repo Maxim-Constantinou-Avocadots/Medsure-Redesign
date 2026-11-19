@@ -39,10 +39,11 @@ export function Hero() {
           <p className={cx(styles.lead, "load-in")} style={delay("0.85s")}>
             {hero.lead}
           </p>
+          <div className={styles.actions}>
+            <Button href="#cover" variant="light">Explore insurance by profession</Button>
+            <Button href="#enquiry" variant="glass">Make an enquiry</Button>
+          </div>
         </div>
-        <Button href="#cover" variant="glass" className={cx(styles.more, "load-in")} style={delay("1.05s")}>
-          Learn more
-        </Button>
       </div>
     </header>
   );

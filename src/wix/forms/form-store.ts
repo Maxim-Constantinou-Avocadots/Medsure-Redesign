@@ -205,6 +205,7 @@ export interface FormStoreOptions {
   formId: string;
   /** Server-fetched form (Astro frontmatter) — skips the client fetch entirely. */
   initialForm?: FormDto;
+  prefill?: (fields: FormFieldDto[]) => FormValues;
 }
 
 /** Everything a form surface renders from. Read it with getState() or through a subscription. */
@@ -263,13 +264,13 @@ export interface FormStore {
   submit(event?: FormSubmitEvent): Promise<SubmitOutcome | false>;
 }
 
-export function createFormStore({ formId, initialForm }: FormStoreOptions): FormStore {
+export function createFormStore({ formId, initialForm, prefill }: FormStoreOptions): FormStore {
   // `base` is the schema as loaded; `form` (in state) is `base` with the rules applied to `values`.
   let base: FormDto | null = initialForm ?? null;
-  let applied: FormFieldDto[] = base ? applyRules(base, defaultValues(base.fields)) : [];
-  // The empty form to reset to after a successful submit — the schema's own defaults.
-  let empty: FormValues = defaultValues(base?.fields ?? []);
+  const initialValues = (fields: FormFieldDto[]) => ({ ...defaultValues(fields), ...prefill?.(fields) });
+  let empty = initialValues(base?.fields ?? []);
   let values: FormValues = empty;
+  let applied: FormFieldDto[] = base ? applyRules(base, values) : [];
   let errors: FormErrors = {};
   let loading = !initialForm;
   let step = 0;
@@ -344,7 +345,7 @@ export function createFormStore({ formId, initialForm }: FormStoreOptions): Form
     base = loaded;
     // Seed the controls once the schema is in: every control is controlled from the first
     // render, so each target holds a value of the right shape before any of them mount.
-    empty = defaultValues(loaded.fields);
+    empty = initialValues(loaded.fields);
     applied = applyRules(loaded, empty);
     values = empty;
     errors = {};

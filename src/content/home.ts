@@ -14,8 +14,8 @@ import type { Photo } from "./liability";
 
 // §1 hero H1 + "Customized Insurance" + stats
 export const hero = {
-  title: "Malpractice cover, tailored especially for you",
-  lead: "Medsure Insurance Agency provides clients with the best medical malpractice insurance coverage — and an uncompromising service experience.",
+  title: "Medical professional liability insurance in Cyprus",
+  lead: "Explore cover for dentists, clinics, independent physicians and other professionals.",
   video: {
     poster: heroPoster,
     alt: "A bright, modern medical clinic with a stethoscope resting on a white desk",
@@ -36,7 +36,7 @@ export const hero = {
 // §1 "Medical Professional Liability — Solutions for all medical professions"
 export const specialtiesIntro = {
   eyebrow: "Medical Professional Liability",
-  title: "Solutions for all medical professions — tailored specifically for you, at the highest standards.",
+  title: "Find cover for your profession",
 };
 
 // §1 "Customized Insurance" bullets + stats copy; §9–14 "Personal support in claims"

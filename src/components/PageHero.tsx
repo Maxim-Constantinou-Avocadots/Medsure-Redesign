@@ -14,13 +14,14 @@ type Props = {
   image: Photo;
   /** Optional block in the bottom-right corner (facts, a button…) */
   aside?: ReactNode;
+  actions?: ReactNode;
   compact?: boolean;
 };
 
 /** Inner-page hero: same language as the homepage hero — full-bleed photo, word-by-word title. */
-export function PageHero({ crumbs, title, lead, image, aside, compact }: Props) {
+export function PageHero({ crumbs, title, lead, image, aside, actions, compact }: Props) {
   return (
-    <header id="top" className={cx(styles.hero, compact && styles.compact)}>
+    <header id="top" className={cx(styles.hero, compact && styles.compact, Boolean(actions) && styles.hasActions)}>
       <div className={styles.media}>
         <Image
           src={image.src}
@@ -55,6 +56,7 @@ export function PageHero({ crumbs, title, lead, image, aside, compact }: Props) 
               {lead}
             </p>
           )}
+          {actions && <div className={styles.actions}>{actions}</div>}
         </div>
         {aside && (
           <div className={cx(styles.aside, "load-in")} style={delay("0.9s")}>

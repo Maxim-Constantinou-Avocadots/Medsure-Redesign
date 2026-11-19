@@ -12,7 +12,7 @@ import { Faq } from "@/components/Faq";
 import { ContactSection } from "@/components/ContactSection";
 import { Closing } from "@/components/Closing";
 import { specialties } from "@/content/liability";
-import { homeContact, specialtiesIntro } from "@/content/home";
+import { specialtiesIntro } from "@/content/home";
 
 export const metadata: PageMetadata = {
   title: { absolute: "Medsure — Medical malpractice insurance in Cyprus" },
@@ -27,11 +27,11 @@ export default function HomePage({ initialForm }: { initialForm?: FormDto }) {
         <Specialties id="cover" eyebrow={specialtiesIntro.eyebrow} title={specialtiesIntro.title} items={specialties} />
         <Why />
         <StatementBand />
+        <Steps />
+        <ContactSection id="enquiry" eyebrow="Contact Medsure" title="Make an enquiry" />
+        <Faq />
         <About />
         <Marquee />
-        <Steps />
-        <Faq />
-        <ContactSection eyebrow={homeContact.eyebrow} title={homeContact.title} />
         <Closing />
       </main>
     </FormSchemaProvider>

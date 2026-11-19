@@ -11,7 +11,7 @@
 // SSR-friendly: pass a server-fetched FormDto as `initialForm` (Astro frontmatter) and no
 // client fetch happens; a SPA passes nothing and the hook loads it.
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
-import { createFormStore, type FormStore, type FormSubmitEvent } from "../../wix/forms/form-store";
+import { createFormStore, type FormStore, type FormStoreOptions, type FormSubmitEvent } from "../../wix/forms/form-store";
 import type { FormDto, FormErrors, FormValues, SubmitOutcome } from "../../wix/forms/types";
 
 export { FORM_ERROR, otherText, otherValue, validateValue } from "../../wix/forms/form-store";
@@ -19,6 +19,7 @@ export { FORM_ERROR, otherText, otherValue, validateValue } from "../../wix/form
 export interface UseWixFormOptions {
   /** Server-fetched form (Astro frontmatter) — skips the client fetch entirely. */
   initialForm?: FormDto;
+  prefill?: FormStoreOptions["prefill"];
 }
 
 export interface UseWixForm {
@@ -61,9 +62,8 @@ export interface UseWixForm {
 }
 
 export function useWixForm(formId: string, options: UseWixFormOptions = {}): UseWixForm {
-  const { initialForm } = options;
   const ref = useRef<{ formId: string; store: FormStore } | null>(null);
-  if (!ref.current || ref.current.formId !== formId) ref.current = { formId, store: createFormStore({ formId, initialForm }) };
+  if (!ref.current || ref.current.formId !== formId) ref.current = { formId, store: createFormStore({ formId, ...options }) };
   const store = ref.current.store;
   useEffect(() => {
     store.start();

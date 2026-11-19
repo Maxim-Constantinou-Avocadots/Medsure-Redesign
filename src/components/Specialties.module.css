@@ -51,3 +51,23 @@
 @keyframes railBar { from { transform: scaleX(.18); } to { transform: scaleX(1); } }
 
 @media (max-width: 960px) { .arrows { display: none; } }
+
+@media (max-width: 640px) {
+  .head { gap: 16px; }
+  .eyebrow { margin-bottom: 12px; }
+  .rail {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+    margin-top: 20px; overflow: visible; scroll-snap-type: none;
+  }
+  .rail .item { width: auto; min-width: 0; opacity: 1; transform: none; }
+  .card { gap: 0; background: var(--surface); border-radius: var(--radius); justify-content: space-between; }
+  .alt .card { background: #fff; }
+  .card:hover { transform: none; }
+  .top, .body { background: transparent; }
+  .alt .top, .alt .body { background: transparent; }
+  .top { padding: 14px 12px 4px; }
+  .body { flex: 0; padding: 4px 12px 14px; }
+  .cardTitle { margin-top: 0; line-height: 1.25; }
+  .more svg { opacity: 1; transform: none; }
+  .img, .cardTitle span:last-child, .label, .text, .progress { display: none; }
+}

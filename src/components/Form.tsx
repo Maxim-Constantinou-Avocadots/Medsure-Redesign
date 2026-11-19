@@ -1,4 +1,5 @@
-import { useContext, useId, type FormEvent } from "react";
+import { useContext, useId, useState, type FormEvent } from "react";
+import { formIds } from "@/content/form-ids";
 import { company, routes } from "@/content/company";
 import { FORM_ERROR, useWixForm } from "@/hooks/forms/useWixForm";
 import { cx } from "@/lib/motion";
@@ -9,15 +10,20 @@ import styles from "./Form.module.css";
 
 type FormState = ReturnType<typeof useWixForm>;
 
-function FormField({ field, state }: { field: FormFieldDto; state: FormState }) {
+function FormField({ field, state, enquiry }: { field: FormFieldDto; state: FormState; enquiry: boolean }) {
   const id = useId();
+  const isMessage = enquiry && field.control === "textarea" && field.label.trim().toLowerCase() === "message";
+  const help = field.description || (isMessage ? "Tell us your profession and what you’d like to discuss." : "");
   const error = state.errors[field.target];
+  const errorText = error && isMessage && !String(state.values[field.target] ?? "").trim()
+    ? "Enter a message about your enquiry."
+    : error;
   const props = {
     ...state.bind(field.target),
     id,
     disabled: field.readOnly,
     required: field.required,
-    "aria-describedby": [field.description && `${id}-help`, error && `${id}-error`].filter(Boolean).join(" ") || undefined,
+    "aria-describedby": [help && `${id}-help`, errorText && `${id}-error`].filter(Boolean).join(" ") || undefined,
   };
   const { control, label, required, showLabel } = field;
   const indicator = state.form?.requiredIndicator;
@@ -33,7 +39,7 @@ function FormField({ field, state }: { field: FormFieldDto; state: FormState }) 
     <div className={cx(styles.field, wide && styles.span2)}>
       <label className={showLabel ? styles.label : "sr-only"} htmlFor={id}>
         {state.form?.requiredIndicatorBefore && <span aria-hidden="true">{requiredText} </span>}
-        {label}
+        {label}{enquiry && !required && !field.readOnly && " (optional)"}
         {!state.form?.requiredIndicatorBefore && <span aria-hidden="true">{requiredText}</span>}
       </label>
       {control === "textarea" ? (
@@ -73,21 +79,44 @@ function FormField({ field, state }: { field: FormFieldDto; state: FormState }) 
           className={inputClass}
         />
       )}
-      {field.description && <small id={`${id}-help`}>{field.description}</small>}
-      {error && <p id={`${id}-error`} className={styles.error} role="alert">{error}</p>}
+      {help && <small id={`${id}-help`}>{help}</small>}
+      {errorText && <p id={`${id}-error`} className={styles.error} role="alert">{errorText}</p>}
     </div>
   );
 }
 
-export function MedsureForm({ formId, inline = false }: { formId: string; inline?: boolean }) {
+export function MedsureForm({ formId, inline = false, enquirySpecialty }: { formId: string; inline?: boolean; enquirySpecialty?: string }) {
   const initialForm = useContext(FormSchema);
-  const state = useWixForm(formId, { initialForm });
+  const enquiry = formId === formIds.contact;
+  const [attempted, setAttempted] = useState(false);
+  const state = useWixForm(formId, {
+    initialForm,
+    prefill: enquiry && enquirySpecialty ? (fields) => {
+      const subject = fields.find((field) => field.control === "text" && !field.hidden && !field.readOnly &&
+        (field.target.startsWith("subject_") || field.label.trim().toLowerCase() === "subject"));
+      return subject ? { [subject.target]: enquirySpecialty } : {};
+    } : undefined,
+  });
   const { form, errors, loading, closed, outcome, step } = state;
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    const element = event.currentTarget;
     const response = await state.submit(event);
-    if (!response || !response.url) return;
-    window.location.assign(response.url);
+    if (!response) {
+      if (enquiry) {
+        setAttempted(true);
+        requestAnimationFrame(() => {
+          const invalid = element.querySelector<HTMLElement>('[aria-invalid="true"]:not(:disabled), [data-form-error]');
+          if (invalid) {
+            invalid.focus({ preventScroll: true });
+            invalid.scrollIntoView({ block: "center" });
+          }
+        });
+      }
+      return;
+    }
+    setAttempted(false);
+    if (response.url) window.location.assign(response.url);
   }
 
   if (outcome) {
@@ -116,16 +145,19 @@ export function MedsureForm({ formId, inline = false }: { formId: string; inline
   return (
     <form className={cx(styles.form, inline && styles.inline, inline && styles.dark)} noValidate onSubmit={hasNextStep ? state.next : onSubmit}>
       {form.steps.length > 1 && <p className={styles.span2}>Step {step + 1} of {form.steps.length}{activeStep?.name && ` · ${activeStep.name}`}</p>}
-      {fields.map((field) => <FormField key={field.target} field={field} state={state} />)}
+      {enquiry && attempted && fields.some((field) => errors[field.target]) && (
+        <p className={cx(styles.span2, styles.error)} role="status">Check the highlighted fields and try again.</p>
+      )}
+      {fields.map((field) => <FormField key={field.target} field={field} state={state} enquiry={enquiry} />)}
       <div className={styles.footer}>
         {step > 0 && <button type="button" className="btn" onClick={state.previous}>{form.previousText || "Back"}</button>}
         <button type="submit" className={cx("btn", inline && "btn--light", styles.submit)} disabled={loading}>
-          <span>{loading ? "Sending…" : hasNextStep ? form.nextText || "Continue" : form.submitText || "Submit"}</span>
+          <span>{loading ? "Sending…" : hasNextStep ? form.nextText || "Continue" : enquiry ? "Send enquiry" : form.submitText || "Submit"}</span>
           <ArrowIcon className="btn__arrow" />
         </button>
         {!inline && <p className={styles.note}>See how we handle your information in our <a href={routes.privacy} className="ul">Privacy Policy</a>.</p>}
       </div>
-      {errors[FORM_ERROR] && <p className={styles.error} role="alert">{errors[FORM_ERROR]}</p>}
+      {errors[FORM_ERROR] && <p className={styles.error} role="alert" tabIndex={-1} data-form-error>{errors[FORM_ERROR]}</p>}
     </form>
   );
 }

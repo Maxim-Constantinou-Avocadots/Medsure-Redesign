@@ -2,13 +2,16 @@
 import Page, { metadata } from "@/app/contact-us/page";
 import Layout from "@/layouts/Layout.astro";
 import { formIds } from "@/content/form-ids";
+import { specialties } from "@/content/liability";
 import { getForm } from "@/wix/forms/forms";
 
+const specialtySlug = Astro.url.searchParams.get("specialty");
+const specialty = specialties.find(({ href }) => href.slice(1) === specialtySlug)?.title;
 const initialForm = await getForm(formIds.contact).catch((error) => {
   console.error("Could not load Medsure contact form:", error);
   return undefined;
 });
 ---
 <Layout {metadata}>
-  <Page {initialForm} client:load />
+  <Page {initialForm} {specialty} client:load />
 </Layout>
